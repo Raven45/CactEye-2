@@ -34,7 +34,7 @@ namespace CactEye2
 
         public TelescopeMenu(Transform Position)
         {
-            this.Position = Position;
+            //CameraModule.CameraTransform = Position;
 
             //unique id for the gui window.
             this.WindowTitle = "CactEye Telescope Control System";
@@ -80,14 +80,18 @@ namespace CactEye2
 
         private void MainGUI(int WindowID)
         {
+            //Top right hand corner button that exits the window.
+            if (GUI.Button(new Rect(WindowPosition.width - 18, 2, 16, 16), ""))
+            {
+                Toggle();
+            }
 
-
-
+            //What you see looking through the telescope.
             ScopeRect = GUILayoutUtility.GetRect(Screen.width * 0.4f, Screen.width*0.4f);
             Texture2D ScopeScreen = CameraModule.UpdateTexture();
             GUI.DrawTexture(ScopeRect, ScopeScreen);
 
-            //Zoom Feedback
+            //Zoom Feedback Label.
             string LabelZoom = "Zoom/Magnification: x";
             LabelZoom += string.Format("{0:####0.0}", 64 / FieldOfView);
             GUILayout.BeginHorizontal();
@@ -95,9 +99,10 @@ namespace CactEye2
             GUILayout.Label(LabelZoom);
             GUILayout.EndHorizontal();
 
-            //Zoom Slider
+            //Zoom Slider Controls.
             GUILayout.BeginHorizontal();
-            FieldOfView = GUILayout.HorizontalSlider(FieldOfView, 0.00001f, 6f);
+            FieldOfView = GUILayout.HorizontalSlider(FieldOfView, 1f, 0f);
+            CameraModule.FieldOfView = 0.5f * Mathf.Pow(4f - FieldOfView * (4f - Mathf.Pow(0.1f, (1f / 3f))), 3);
             GUILayout.EndHorizontal();
         }
 
@@ -108,9 +113,8 @@ namespace CactEye2
 
         public void UpdatePosition(Transform Position)
         {
-            this.Position = Position;
-            CameraModule.CameraTransform = Position;
-            CameraModule.FieldOfView = FieldOfView;
+            //this.Position = Position;
+            CameraModule.UpdatePosition(Position);
         }
     }
 }
