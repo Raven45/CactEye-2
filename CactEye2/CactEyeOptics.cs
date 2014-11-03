@@ -60,6 +60,7 @@ namespace CactEye2
                 Debug.Log(temp.ToString());
             }
         }
+
         public override void OnUpdate()
         {
 
@@ -88,6 +89,12 @@ namespace CactEye2
 
             //Send updated position information to the telescope gui object.
             TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
+        }
+
+        public void BreakScope()
+        {
+            IsFunctional = false;
+            IsDamaged = true;
         }
 
         [KSPEvent(guiActive = true, guiName = "Control from Here", active = true)]

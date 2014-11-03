@@ -160,6 +160,11 @@ namespace CactEye2
             this.CameraTransform = Position;
         }
 
+        public Camera GetCamera(int Index)
+        {
+            return CameraObject[Index];
+        }
+
         #endregion
 
     }
