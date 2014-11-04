@@ -8,15 +8,21 @@ namespace CactEye2
 {
     class CactEyeCamera: MonoBehaviour
     {
+        //Camera resolution
         private int CameraWidth;
         private int CameraHeight;
 
+        //Linear transform of the cameras
         public Transform CameraTransform;
+
+        //Field of view of the camera
         public float FieldOfView;
 
+        //Texture stuff...
         private RenderTexture ScopeRenderTexture;
         private Texture2D ScopeTexture2D;
 
+        //I wonder if C# has a map data structure; a map would simplify some things
         private Camera[] CameraObject = { null, null, null };
 
         private Renderer[] skyboxRenderers;
@@ -57,6 +63,8 @@ namespace CactEye2
          * Output: A fully rendered texture of what's through the telescope.
          * Purpose: This function will produce a single frame texture of what image is being looked
          * at through the telescope. 
+         * Note: Need to modify behavior depending on what processor is currently active.
+         * Proposed arguement: CactEyeProcessor CPU
          */
         public Texture2D UpdateTexture()
         {
@@ -99,6 +107,18 @@ namespace CactEye2
             RenderTexture.active = CurrentRT;
 
             return ScopeTexture2D;
+        }
+
+        public Texture2D UpdateTexture(bool HasProcessor)
+        {
+            if (HasProcessor)
+            {
+                return UpdateTexture();
+            }
+            else
+            {
+                return new Texture2D(CameraWidth, CameraHeight);
+            }
         }
 
         /*

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace CactEye2
 {
+
     public class CactEyeOptics: PartModule
     {
         [KSPField(isPersistant = false)]
@@ -29,7 +30,7 @@ namespace CactEye2
         private ModuleAnimateGeneric opticsAnimate;
 
         //Control Variable that disables functionality if there is an error.
-        private bool Error = false;
+        //private bool Error = false;
 
         private TelescopeMenu TelescopeControlMenu;
 
@@ -54,7 +55,7 @@ namespace CactEye2
             }
             catch (Exception E)
             {
-                Error = true;
+                //Error = true;
                 Debug.Log("CactEye 2: Exception 1: Was not able to create the Telescope Control Menu object. You should try re-installing CactEye2 and ensure that old versions of CactEye are deleted.");
                 Debug.Log(E.ToString());
                 Debug.Log(temp.ToString());
@@ -95,6 +96,24 @@ namespace CactEye2
         {
             IsFunctional = false;
             IsDamaged = true;
+        }
+
+        public bool IsMenuEnabled()
+        {
+            try
+            {
+                return TelescopeControlMenu.IsMenuEnabled();
+            }
+            catch
+            {
+                Debug.Log(" CactEye 2: Unknown Exception");
+                return false;
+            }
+        }
+
+        public float GetFOV()
+        {
+            return TelescopeControlMenu.GetFOV();
         }
 
         [KSPEvent(guiActive = true, guiName = "Control from Here", active = true)]

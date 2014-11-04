@@ -8,7 +8,7 @@ namespace CactEye2
 {
     class TelescopeMenu: MonoBehaviour
     {
-
+        
         //Position and size of the window
         private Rect WindowPosition;
 
@@ -27,11 +27,7 @@ namespace CactEye2
         private float GyroSensitivity = 1f;
 
         //Control variable for enabling the Gyro.
-        private bool GyroEnabled = true;
-        private int ProcessorQuality = 3;
-        private bool HasWideFieldProcessor = false;
-        private bool HasAsteroidProcessor = false;
-        private bool HasOccultationProcessor = false;
+        private bool GyroEnabled = false;
 
         private Rect ScopeRect;
 
@@ -42,22 +38,18 @@ namespace CactEye2
         private Texture2D CrosshairTexture = null;
         private Texture2D TargetPointerTexture = null;
         private Texture2D SaveScreenshotTexture = null;
+        private Texture2D Atom6Icon = null;
+        private Texture2D Back9Icon = null;
+        private Texture2D Forward9Icon = null;
 
         //private ModuleReactionWheel[] ReactionWheels;
-        private List<ModuleReactionWheel> ReactionWheels = new List<ModuleReactionWheel>();
-        private List<ModuleCommand> CommandModules = new List<ModuleCommand>();
+        private List<CactEyeProcessor> Processors = new List<CactEyeProcessor>();
+        private CactEyeProcessor ActiveProcessor;
+        private List<CactEyeGyro> ReactionWheels = new List<CactEyeGyro>();
         private List<float> ReactionWheelPitchTorques = new List<float>();
         private List<float> ReactionWheelYawTorques = new List<float>();
         private List<float> ReactionWheelRollTorques = new List<float>();
-        private List<float> CommandPitchTorques = new List<float>();
-        private List<float> CommandYawTorques = new List<float>();
-        private List<float> CommandRollTorques = new List<float>();
 
-
-
-        //private float[] ReactionWheelPitchTorgues;
-        //private float[] ReactionWheelYawTorgues;
-        //private float[] ReactionWheelRollTorgues;
 
         public TelescopeMenu(Transform Position)
         {
@@ -72,6 +64,9 @@ namespace CactEye2
             CrosshairTexture = GameDatabase.Instance.GetTexture("CactEye/Icons/crosshair", false);
             TargetPointerTexture = GameDatabase.Instance.GetTexture("CactEye/Icons/target", false);
             SaveScreenshotTexture = GameDatabase.Instance.GetTexture("CactEye/Icons/save", false);
+            Atom6Icon = GameDatabase.Instance.GetTexture("CactEye/Icons/atom6", false);
+            Back9Icon = GameDatabase.Instance.GetTexture("CactEye/Icons/back19", false);
+            Forward9Icon = GameDatabase.Instance.GetTexture("CactEye/Icons/forward19", false);
 
             //Create the window rectangle object
             float StartXPosition = Screen.width * 0.1f;
@@ -90,17 +85,6 @@ namespace CactEye2
                 Debug.Log("CactEye 2: Exception 2: Was not able to create the camera object.");
                 Debug.Log(E.ToString());
             }
-
-            try
-            {
-                //Grab Reaction Wheels
-                GetReactionWheels();
-            }
-            catch (Exception E)
-            {
-                Debug.Log("CactEye 2: Exception 3: Was not able to get a list of Reaction Wheels.");
-                Debug.Log(E.ToString());
-            }
         }
 
         //Might take a look at using lazy initialization for enabling/disabling the menu object
@@ -109,14 +93,26 @@ namespace CactEye2
             if (!IsGUIVisible)
             {
                 RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
+
+                //Moved to here from the constructor; this should get a new list of gyros
+                //every time the player enables the menu to account for part changes due to
+                //docking/undocking operations.
+                try
+                {
+                    //Grab Reaction Wheels
+                    GetReactionWheels();
+                    GetProcessors();
+                }
+                catch (Exception E)
+                {
+                    Debug.Log("CactEye 2: Exception 3: Was not able to get a list of Reaction Wheels.");
+                    Debug.Log(E.ToString());
+                }
             }
  
             else
             {
                 RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
-
-                //Reset Gyro
-                GyroSensitivity = 1f;
             }
             IsGUIVisible = !IsGUIVisible;
         }
@@ -131,7 +127,7 @@ namespace CactEye2
 
             //What you see looking through the telescope.
             ScopeRect = GUILayoutUtility.GetRect(Screen.width * 0.4f, Screen.width*0.4f);
-            Texture2D ScopeScreen = CameraModule.UpdateTexture();
+            Texture2D ScopeScreen = CameraModule.UpdateTexture(ActiveProcessor);
             GUI.DrawTexture(ScopeRect, ScopeScreen);
 
             //Draw the preview texture
@@ -139,36 +135,61 @@ namespace CactEye2
             //Draw the crosshair texture
             GUI.DrawTexture(new Rect(ScopeRect.xMin + (0.5f * ScopeRect.width) - 64, ScopeRect.yMin + (0.5f * ScopeRect.height) - 64, 128, 128), CrosshairTexture);
 
+            //Draw Processor controls in bottom center of display, with observation and screenshot buttons in center.
+            DrawProcessorControls();
             DrawTargetPointer();
 
-            //Zoom Feedback Label.
-            string LabelZoom = "Zoom/Magnification: x";
-            LabelZoom += string.Format("{0:####0.0}", 64 / FieldOfView);
-            GUILayout.BeginHorizontal();
-            GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperCenter;
-            GUILayout.Label(LabelZoom);
-            GUILayout.EndHorizontal();
+            if (ActiveProcessor)
+            {
+                //Zoom Feedback Label.
+                string LabelZoom = "Zoom/Magnification: x";
+                if (CameraModule.FieldOfView > 0.0064)
+                {
+                    LabelZoom += string.Format("{0:####0.0}", 64 / CameraModule.FieldOfView);
+                }
+                else
+                {
+                    LabelZoom += string.Format("{0:0.00E+0}", (64 / CameraModule.FieldOfView));
+                }
+                GUILayout.BeginHorizontal();
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+                GUILayout.Label(LabelZoom);
+                GUILayout.EndHorizontal();
 
-            //Zoom Slider Controls.
-            GUILayout.BeginHorizontal();
-            FieldOfView = GUILayout.HorizontalSlider(FieldOfView, 0f, 1f);
-            CameraModule.FieldOfView = 0.5f * Mathf.Pow(4f - FieldOfView * (4f - Mathf.Pow(0.1f, (1f / 3f))), 3);
-            GUILayout.EndHorizontal();
+                //Zoom Slider Controls.
+                GUILayout.BeginHorizontal();
+                FieldOfView = GUILayout.HorizontalSlider(FieldOfView, 0f, 1f);
+                CameraModule.FieldOfView = 0.5f * Mathf.Pow(4f - FieldOfView * (4f - Mathf.Pow(0.1f, (1f / 3f))), 3);
+                GUILayout.EndHorizontal();
+            }
+
+            else
+            {
+                GUILayout.BeginHorizontal();
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+                GUILayout.Label("Processor not installed; optics module cannot function without an image processor.");
+                GUILayout.EndHorizontal();
+            }
 
             //Gyro GUI. Active only if the craft has an active gyro
             if (GyroEnabled)
             {
-
+                //Gyro Slider Label
                 GUILayout.BeginHorizontal();
                 GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
-                GUILayout.Label("Gyro Sensitivity:  ", GUILayout.ExpandWidth(false));
+                GUILayout.Label("Gyro Sensitivity:  " + GyroSensitivity.ToString("P") + " + minimum gyroscopic torgue.", GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
 
                 //Gyro Slider Controls.
+                GUILayout.BeginHorizontal();
                 GyroSensitivity = GUILayout.HorizontalSlider(GyroSensitivity, 0f, 1f, GUILayout.ExpandWidth(true));
                 GUILayout.EndHorizontal();
 
                 SetTorgue();
             }
+
+            //Make the window draggable by the top bar only.
+            GUI.DragWindow(new Rect(0, 0, WindowPosition.width, 16));
         }
 
         private void DrawGUI()
@@ -210,6 +231,17 @@ namespace CactEye2
             return GyroSensitivity;
         }
 
+        public bool IsMenuEnabled()
+        {
+            return IsGUIVisible;
+        }
+
+        public float GetFOV()
+        {
+            return FieldOfView;
+        }
+
+        //Don't touch; it works.
         private void DrawTargetPointer()
         {
 
@@ -231,47 +263,112 @@ namespace CactEye2
             }
         }
 
-        private void GetReactionWheels()
+        private void DrawProcessorControls()
         {
 
-            //ReactionWheels = FlightGlobals.ActiveVessel.GetComponents<ModuleReactionWheel>();
-            foreach(Part p in FlightGlobals.ActiveVessel.Parts)
+            //Draw save icon
+            if (ActiveProcessor && ActiveProcessor.Type.Contains("Wide Field"))
             {
-                ModuleReactionWheel mrw = p.GetComponent<ModuleReactionWheel>();
+                if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) + 20), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), SaveScreenshotTexture))
+                {
+                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                }
+            }
+
+            //Draw gather science icon
+            //Atom6 icon from Freepik
+            //<div>Icons made by Freepik from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>         is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
+            if (ActiveProcessor && HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX)
+            {
+                if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) - 20), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Atom6Icon))
+                {
+                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                }
+            }
+
+            //Previous/Next buttons
+            if (Processors.Count<CactEyeProcessor>() > 1)
+            {
+                //Previous button
+                if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) - 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Back9Icon))
+                {
+                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                }
+
+                //Next Button
+                if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) + 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Forward9Icon))
+                {
+                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                }
+            }
+        }
+
+        //Refactored 11/3/2014
+        private void GetReactionWheels()
+        {
+            ReactionWheels.Clear();
+
+            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            {
+                CactEyeGyro mrw = p.GetComponent<CactEyeGyro>();
                 if (mrw != null)
                 {
                     if (!ReactionWheels.Contains(mrw))
                     {
                         ReactionWheels.Add(mrw);
-                        //ReactionWheelPitchTorques.Add(mrw.PitchTorque);
-                        //ReactionWheelYawTorques.Add(mrw.YawTorque);
-                        //ReactionWheelRollTorques.Add(mrw.RollTorque);
+                        GyroSensitivity = mrw.GyroSensitivity;
                     }
                 }
             }
 
-            ReactionWheelPitchTorques = ReactionWheels.Select(ModuleReactionWheel => ModuleReactionWheel.PitchTorque).ToList();
-            ReactionWheelYawTorques = ReactionWheels.Select(ModuleReactionWheel => ModuleReactionWheel.YawTorque).ToList();
-            ReactionWheelRollTorques = ReactionWheels.Select(ModuleReactionWheel => ModuleReactionWheel.RollTorque).ToList();
+            Debug.Log("CactEye 2: Found " + ReactionWheels.Count().ToString() + " Gyro units.");
+
+            if (ReactionWheels.Count<CactEyeGyro>() > 0)
+            {
+                GyroEnabled = true;
+                ReactionWheelPitchTorques = ReactionWheels.Select(CactEyeGyro => CactEyeGyro.PitchTorque).ToList();
+                ReactionWheelYawTorques = ReactionWheels.Select(CactEyeGyro => CactEyeGyro.YawTorque).ToList();
+                ReactionWheelRollTorques = ReactionWheels.Select(CactEyeGyro => CactEyeGyro.RollTorque).ToList();
+            }
+            else
+            {
+                GyroEnabled = false;
+            }
         }
 
+        private void GetProcessors()
+        {
+            Processors.Clear();
+
+            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            {
+                CactEyeProcessor cpu = p.GetComponent<CactEyeProcessor>();
+                if (cpu != null)
+                {
+                    if (!Processors.Contains(cpu))
+                    {
+                        Processors.Add(cpu);
+                    }
+                }
+            }
+
+            Debug.Log("CactEye 2: Found " + Processors.Count().ToString() + " Processors.");
+
+            if (Processors.Count<CactEyeProcessor>() > 0)
+            {
+                ActiveProcessor = Processors.First<CactEyeProcessor>();
+            }
+        }
 
         private void SetTorgue()
         {
-            //int i = 0;
-            //foreach (ModuleReactionWheel mrw in ReactionWheels)
-            //{
-            //    ReactionWheels[i].PitchTorque = ReactionWheelPitchTorgues[i] * GyroSensitivity;
-            //    ReactionWheels[i].YawTorque = ReactionWheelYawTorgues[i] * GyroSensitivity;
-            //    ReactionWheels[i].RollTorque = ReactionWheelRollTorgues[i] * GyroSensitivity;
-            //    i++;
-            //}
+
             for (int i = 0; i < ReactionWheels.Count(); i++)
             {
-
-                ReactionWheels[i].PitchTorque = ReactionWheelPitchTorques[i] * GyroSensitivity;
-                ReactionWheels[i].YawTorque = ReactionWheelYawTorques[i] * GyroSensitivity;
-                ReactionWheels[i].RollTorque = ReactionWheelRollTorques[i] * GyroSensitivity;
+                ReactionWheels[i].GyroSensitivity = GyroSensitivity;
+                //ReactionWheels[i].PitchTorque = ReactionWheelPitchTorques[i] * GyroSensitivity;
+                //ReactionWheels[i].YawTorque = ReactionWheelYawTorques[i] * GyroSensitivity;
+                //ReactionWheels[i].RollTorque = ReactionWheelRollTorques[i] * GyroSensitivity;
             }
         }
     }
