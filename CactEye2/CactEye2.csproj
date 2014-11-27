@@ -49,6 +49,8 @@
     <Compile Include="CactEyeGyro.cs" />
     <Compile Include="CactEyeOptics.cs" />
     <Compile Include="CactEyeProcessor.cs" />
+    <Compile Include="CactEyeAPI.cs" />
+    <Compile Include="CactEyeWideField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TelescopeMenu.cs" />
   </ItemGroup>

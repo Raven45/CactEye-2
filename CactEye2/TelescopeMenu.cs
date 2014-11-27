@@ -50,6 +50,14 @@ namespace CactEye2
         private List<float> ReactionWheelYawTorques = new List<float>();
         private List<float> ReactionWheelRollTorques = new List<float>();
 
+        //Status message for player
+        private string Notification = "";
+        static private double timer = 6f;
+        private double storedTime = 0f;
+
+        //Check for pause menu
+        private bool GameIsPaused = false;
+
 
         public TelescopeMenu(Transform Position)
         {
@@ -92,8 +100,6 @@ namespace CactEye2
         {
             if (!IsGUIVisible)
             {
-                RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
-
                 //Moved to here from the constructor; this should get a new list of gyros
                 //every time the player enables the menu to account for part changes due to
                 //docking/undocking operations.
@@ -105,13 +111,18 @@ namespace CactEye2
                 }
                 catch (Exception E)
                 {
-                    Debug.Log("CactEye 2: Exception 3: Was not able to get a list of Reaction Wheels.");
+                    Debug.Log("CactEye 2: Exception 3: Was not able to get a list of Reaction Wheels or Processors.");
                     Debug.Log(E.ToString());
                 }
+
+                ActiveProcessor.ActivateProcessor();
+                RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
             }
  
             else
             {
+                ActiveProcessor.DeactivateProcessor();
+                ActiveProcessor = null;
                 RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
             }
             IsGUIVisible = !IsGUIVisible;
@@ -119,6 +130,9 @@ namespace CactEye2
 
         private void MainGUI(int WindowID)
         {
+            timer += Planetarium.GetUniversalTime() - storedTime;
+            storedTime = Planetarium.GetUniversalTime();
+
             //Top right hand corner button that exits the window.
             if (GUI.Button(new Rect(WindowPosition.width - 18, 2, 16, 16), ""))
             {
@@ -134,6 +148,12 @@ namespace CactEye2
             GUI.DrawTexture(new Rect(ScopeRect.xMin, ScopeRect.yMax - 32f, 128f, 32f), PreviewTexture);
             //Draw the crosshair texture
             GUI.DrawTexture(new Rect(ScopeRect.xMin + (0.5f * ScopeRect.width) - 64, ScopeRect.yMin + (0.5f * ScopeRect.height) - 64, 128, 128), CrosshairTexture);
+            //Draw the notification label
+            if (timer > 5f)
+            {
+                Notification = "";
+            }
+            GUI.Label(new Rect(ScopeRect.xMin + 16, ScopeRect.yMin + 16, 600, 32), new GUIContent(Notification)); 
 
             //Draw Processor controls in bottom center of display, with observation and screenshot buttons in center.
             DrawProcessorControls();
@@ -154,13 +174,20 @@ namespace CactEye2
                 GUILayout.BeginHorizontal();
                 GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
                 GUILayout.Label(LabelZoom);
+
+                //Active Processor and status Label
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperCenter;
+                GUILayout.Label("Active Processor: " + ActiveProcessor.GetProcessorType());
                 GUILayout.EndHorizontal();
 
                 //Zoom Slider Controls.
                 GUILayout.BeginHorizontal();
                 FieldOfView = GUILayout.HorizontalSlider(FieldOfView, 0f, 1f);
-                CameraModule.FieldOfView = 0.5f * Mathf.Pow(4f - FieldOfView * (4f - Mathf.Pow(0.1f, (1f / 3f))), 3);
+                CameraModule.FieldOfView = 0.5f * Mathf.Pow(4f - FieldOfView * (4f - Mathf.Pow(ActiveProcessor.GetMinimumFOV(), (1f / 3f))), 3);
                 GUILayout.EndHorizontal();
+
+                //Log spam
+                //Debug.Log("CactEye 2: MinimumFOV = " + ActiveProcessor.GetMinimumFOV().ToString());
             }
 
             else
@@ -194,7 +221,19 @@ namespace CactEye2
 
         private void DrawGUI()
         {
-            WindowPosition = GUILayout.Window(WindowId, WindowPosition, MainGUI, WindowTitle);
+
+            try
+            {
+                if (!PauseMenu.isOpen && !FlightResultsDialog.isDisplaying && !MapView.MapIsEnabled)
+                {
+                    WindowPosition = GUILayout.Window(WindowId, WindowPosition, MainGUI, WindowTitle);
+                }
+            }
+            //Ignore the pesky error and assume game is not paused.
+            catch
+            {
+                WindowPosition = GUILayout.Window(WindowId, WindowPosition, MainGUI, WindowTitle);
+            }
         }
 
         public void UpdatePosition(Transform Position)
@@ -241,7 +280,14 @@ namespace CactEye2
             return FieldOfView;
         }
 
-        //Don't touch; it works.
+        /* ************************************************************************************************
+         * Function Name: DrawTargetPointer
+         * Input: None
+         * Output: None
+         * Purpose: This function will draw the pink target recticle in the scope's view. This works
+         * rather well, so don't touch this unless it's absolutely neccesary, as there's a lot of moving
+         * parts here.
+         * ************************************************************************************************/
         private void DrawTargetPointer()
         {
 
@@ -263,47 +309,83 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: DrawProcessorControls
+         * Input: None
+         * Output: None
+         * Purpose: This function will draw the four main processor control objects: the screenshot
+         * button, the science button, and the next/previous processor buttons.
+         * The screenshot button will only display and be available if the telescope has a valid
+         * processor installed on the scope.
+         * The science button will only appear if a target is selected, if there is a valid processor
+         * installed, and if the game is not a sandbox game. It will generate a science report based
+         * on the selected target.
+         * The next/previous buttons will only appear if the scope has more than one processor installed,
+         * and will allow the player to cycle through the different processors.
+         * ************************************************************************************************/
         private void DrawProcessorControls()
         {
+            //if (!ActiveProcessor.IsActive())
+            //{
+            //    //Craft is out of power.
+            //    Notification = "Image processor is out of power; shutting down processor.";
+            //    timer = 0f;
+            //    Processors.Remove(ActiveProcessor);
+            //}
 
             //Draw save icon
-            if (ActiveProcessor && ActiveProcessor.Type.Contains("Wide Field"))
+            if (FlightGlobals.fetch.VesselTarget != null && ActiveProcessor && ActiveProcessor.GetProcessorType().Contains("Wide Field"))
             {
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) + 20), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), SaveScreenshotTexture))
                 {
                     //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                    Notification = " Screenshot saved to " + WriteTextureToDrive(CameraModule.TakeScreenshot(ActiveProcessor));
+                    timer = 0f;
                 }
             }
 
             //Draw gather science icon
             //Atom6 icon from Freepik
             //<div>Icons made by Freepik from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>         is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
-            if (ActiveProcessor && HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX)
+            if (FlightGlobals.fetch.VesselTarget != null && ActiveProcessor && HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX)
             {
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) - 20), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Atom6Icon))
                 {
                     //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                    //ActiveProcessor.GenerateScienceReport(TakeScreenshot(ActiveProcessor.GetType()));
+                    Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
+                    timer = 0f;
                 }
             }
 
+            //Got an off-by-one error in the list somewhere
             //Previous/Next buttons
             if (Processors.Count<CactEyeProcessor>() > 1)
             {
                 //Previous button
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) - 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Back9Icon))
                 {
-                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                    ActiveProcessor = GetPrevious(Processors, ActiveProcessor);
                 }
 
                 //Next Button
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) + 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Forward9Icon))
                 {
-                    //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
+                    ActiveProcessor = GetNext(Processors, ActiveProcessor);
                 }
             }
         }
 
-        //Refactored 11/3/2014
+        /* ************************************************************************************************
+         * Function Name: GetReactionWheels
+         * Input: none
+         * Output: None
+         * Purpose: This function will grab a list of gyroscopes installed on the scope's craft. The name
+         * is leftover from a previous functionality, of which the function use to return a list of all
+         * reactionwheels, including command modules and gyroscopes. 
+         * 
+         * This was heavily refactored on 11/3/2014 by Raven.
+         * ************************************************************************************************/
         private void GetReactionWheels()
         {
             ReactionWheels.Clear();
@@ -336,6 +418,13 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: GetProcessors
+         * Input: None
+         * Output: None
+         * Purpose: This function will generate a list of image processors installed on the telescope
+         * craft.
+         * ************************************************************************************************/
         private void GetProcessors()
         {
             Processors.Clear();
@@ -357,19 +446,80 @@ namespace CactEye2
             if (Processors.Count<CactEyeProcessor>() > 0)
             {
                 ActiveProcessor = Processors.First<CactEyeProcessor>();
+                ActiveProcessor.Active = true;
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: SetTorgue
+         * Input: None
+         * Output: None
+         * Purpose: This function will modify the torgue rating of all gyroscopes installed on the telescope
+         * craft. This is tied directly with the gryoscope sensitivity control slider.
+         * ************************************************************************************************/
         private void SetTorgue()
         {
 
             for (int i = 0; i < ReactionWheels.Count(); i++)
             {
                 ReactionWheels[i].GyroSensitivity = GyroSensitivity;
-                //ReactionWheels[i].PitchTorque = ReactionWheelPitchTorques[i] * GyroSensitivity;
-                //ReactionWheels[i].YawTorque = ReactionWheelYawTorques[i] * GyroSensitivity;
-                //ReactionWheels[i].RollTorque = ReactionWheelRollTorques[i] * GyroSensitivity;
             }
+        }
+
+
+        private static CactEyeProcessor GetNext<CactEyeProcessor>(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
+        {
+            try
+            {
+                return list.SkipWhile(x => !x.Equals(current)).Skip(1).First();
+            }
+            catch
+            {
+                return default(CactEyeProcessor);
+            }
+        }
+
+        private static CactEyeProcessor GetPrevious<CactEyeProcessor>(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
+        {
+            try
+            {
+                return list.TakeWhile(x => !x.Equals(current)).Last();
+            }
+            catch
+            {
+                return default(CactEyeProcessor);
+            }
+        }
+
+        /* ************************************************************************************************
+         * Function Name: WriteTextureToDrive
+         * Input: The texture object that will be written to the hard drive.
+         * Output: None
+         * Purpose: This function will take an input texture and then convert it to a png file in the 
+         * CactEye subfolder of the Screenshot folder.
+         * This currently has some bugs.
+         * If Linux users complain about screenshots not saving to the disk, then this is the first place
+         * to look.
+         * ************************************************************************************************/
+        private string WriteTextureToDrive(Texture2D Input)
+        {
+            byte[] Bytes = Input.EncodeToPNG();
+            string ScreeshotFolderPath = KSPUtil.ApplicationRootPath.Replace("\\", "/") + "Screenshots/CactEye/";
+            //string TargetName = FlightGlobals.activeTarget.ToString();
+            string TargetName = FlightGlobals.fetch.VesselTarget.GetName().ToString();
+            string ScreenshotFilename = "";
+
+            
+
+            //Create CactEye screenshot folder if it doesn't exist
+            if (!System.IO.Directory.Exists(ScreeshotFolderPath))
+            {
+                System.IO.Directory.CreateDirectory(ScreeshotFolderPath);
+            }
+
+            ScreenshotFilename = TargetName + CactEyeAPI.Time() + ".png";
+            System.IO.File.WriteAllBytes(ScreeshotFolderPath + ScreenshotFilename, Bytes);
+            return ScreenshotFilename;
         }
     }
 }

@@ -62,6 +62,15 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: OnUpdate
+         * Input: None
+         * Output: None
+         * Purpose: This function will run once every frame. It is used for some event handling, and for
+         * updating information such as the scope orientation and position. It will also check for the 
+         * condition of when the telescope is pointed at the sun, and will damage the scope if it
+         * detects excessive sun exposure.
+         * ************************************************************************************************/
         public override void OnUpdate()
         {
 
@@ -86,18 +95,66 @@ namespace CactEye2
                         IsFunctional = true;
                     }
                 }
+
+                //If the aperture is opened and the Sun is not occulted.
+                if (IsFunctional && CactEyeAPI.CheckOccult(FlightGlobals.Bodies[0]) == "")
+                {
+                    //Check if we're pointing at the sun
+                    Vector3d Heading = (FlightGlobals.Bodies[0].position - FlightGlobals.ship_position).normalized;
+                    if (Vector3d.Dot(transform.up, Heading) > 0.9)
+                    {
+                        ScreenMessages.PostScreenMessage("Telescope pointed directly at sun, optics damaged and processors fried!", 6, ScreenMessageStyle.UPPER_CENTER);
+                        BreakScope();
+                        DestroyProcessors();
+                        //Destroy all the processors, should be fun :)
+                    }
+                    else if (Vector3d.Dot(transform.up, Heading) > 0.85)
+                    {
+                        ScreenMessages.PostScreenMessage("Telescope is getting close to the sun. Please make course adjustements before an equipment failure happens!", 6, ScreenMessageStyle.UPPER_CENTER);
+                    }
+                }
             }
 
             //Send updated position information to the telescope gui object.
             TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
         }
 
+        /* ************************************************************************************************
+         * Function Name: BreakScope
+         * Input: None
+         * Output: None
+         * Purpose: This function will "damage" the telescope and will render the telescope inoperable.
+         * ************************************************************************************************/
         public void BreakScope()
         {
             IsFunctional = false;
             IsDamaged = true;
         }
 
+        /* ************************************************************************************************
+         * Function Name: DestroyProcessors
+         * Input: None
+         * Output: None
+         * Purpose: This function will destroy all onboard processors. 
+         * ************************************************************************************************/
+        public void DestroyProcessors()
+        {
+            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            {
+                CactEyeProcessor cpu = p.GetComponent<CactEyeProcessor>();
+                if (cpu != null)
+                {
+                    cpu.Die(); //Good-bye!
+                }
+            }
+        }
+
+        /* ************************************************************************************************
+         * Function Name: OnMenuEnabled
+         * Input: None
+         * Output: Boolean value
+         * Purpose: This function will check to see if the telescope control menu is open.
+         * ************************************************************************************************/
         public bool IsMenuEnabled()
         {
             try
@@ -111,31 +168,71 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: GetFOV
+         * Input: None
+         * Output: The current field of view.
+         * Purpose: This function will check for and return the current field of view of the telescope.
+         * Used to allow other classes to check the current zoom of the scope.
+         * ************************************************************************************************/
         public float GetFOV()
         {
             return TelescopeControlMenu.GetFOV();
         }
 
+        /* ************************************************************************************************
+         * Function Name: controlFromHere
+         * Input: None
+         * Output: None
+         * Purpose: This is an event that is activated by a right click action on the scope. This function
+         * will set the scope as the reference part for control of the craft.
+         * ************************************************************************************************/
         [KSPEvent(guiActive = true, guiName = "Control from Here", active = true)]
         public void controlFromHere()
         {
             vessel.SetReferenceTransform(part);
         }
 
+        /* ************************************************************************************************
+         * Function Name: ToggleGUI
+         * Input: None
+         * Output: None
+         * Purpose: This function will either open or close the telescope control menu only if the scope 
+         * is not damaged and is operable. This will throw an exception if there are problems; the 
+         * exception thrown by this function should never be thrown by a player's computer, unless there
+         * is something horribly wrong with either the CactEye installation, the KSP installation, or 
+         * the player's computer. This could be, in rare cases, thrown when the player's computer runs
+         * out of memory.
+         * ************************************************************************************************/
         [KSPEvent(guiActive = true, guiName = "Toggle GUI", active = true)]
         public void ToggleGUI()
         {
-            try
+            if (!IsDamaged)
             {
-                TelescopeControlMenu.Toggle();
+                try
+                {
+                    TelescopeControlMenu.Toggle();
+                }
+                catch (Exception E)
+                {
+                    Debug.Log("CactEye 2: Exception 3: Was not able to bring up the Telescope Control Menu. The Telescope Control Menu returned a null reference.");
+                    Debug.Log(E.ToString());
+                }
             }
-            catch (Exception E)
+            else
             {
-                Debug.Log("CactEye 2: Exception 3: Was not able to bring up the Telescope Control Menu. The Telescope Control Menu returned a null reference.");
-                Debug.Log(E.ToString());
+                //Display error message that scope is damaged.
+                ScreenMessages.PostScreenMessage("Telescope optics are damaged! Telescope needs to be repaired by EVA!", 6, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: FixScope
+         * Input: None
+         * Output: None
+         * Purpose: This function will render a damaged scope operable again. This is activated via EVA
+         * through the right click menu.
+         * ************************************************************************************************/
         [KSPEvent(active = false, externalToEVAOnly = true, guiActiveUnfocused = true, guiName = "Repair Optics", unfocusedRange = 5)]
         public void FixScope()
         {
@@ -143,6 +240,13 @@ namespace CactEye2
             Events["FixScope"].active = false;
         }
 
+        /* ************************************************************************************************
+         * Function Name: OpenSmallAperture
+         * Input: None
+         * Output: None
+         * Purpose: This function will open the aperture on a FungEye optics system. This may be deprecated
+         * sometime in the future.
+         * ************************************************************************************************/
         [KSPEvent(active = false, guiActive = true, guiActiveUnfocused = true, guiName = "Open Aperture (permanent!)", unfocusedRange = 2)]
         public void OpenSmallAperture()
         {

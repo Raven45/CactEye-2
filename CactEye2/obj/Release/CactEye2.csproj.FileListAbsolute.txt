@@ -22,3 +22,8 @@ C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Release\CactEye2.pdb
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.dll
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.pdb
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.csprojResolveAssemblyReference.cache
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Release\CactEye2.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Release\CactEye2.pdb
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.csprojResolveAssemblyReference.cache
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Release\CactEye2.pdb

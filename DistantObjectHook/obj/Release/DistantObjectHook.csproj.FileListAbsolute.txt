@@ -11,3 +11,13 @@ C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\CactEye2
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.csprojResolveAssemblyReference.cache
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.dll
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.pdb
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\DistantObjectHook.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\DistantObjectHook.pdb
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\CactEye2.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\TDx.TDxInput.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\Mono.Cecil.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\Assembly-CSharp-firstpass.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\bin\Release\CactEye2.pdb
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.csprojResolveAssemblyReference.cache
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.dll
+C:\Users\aburns2\Dropbox\CactEye2\CactEye-2\DistantObjectHook\obj\Release\DistantObjectHook.pdb

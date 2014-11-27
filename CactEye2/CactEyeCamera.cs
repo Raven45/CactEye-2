@@ -20,7 +20,9 @@ namespace CactEye2
 
         //Texture stuff...
         private RenderTexture ScopeRenderTexture;
+        private RenderTexture FullResolutionTexture;
         private Texture2D ScopeTexture2D;
+        private Texture2D FullTexture2D;
 
         //I wonder if C# has a map data structure; a map would simplify some things
         private Camera[] CameraObject = { null, null, null };
@@ -44,7 +46,11 @@ namespace CactEye2
             ScopeRenderTexture = new RenderTexture(CameraWidth, CameraHeight, 24);
             ScopeRenderTexture.Create();
 
+            FullResolutionTexture = new RenderTexture(Screen.width, Screen.height, 24);
+            FullResolutionTexture.Create();
+
             ScopeTexture2D = new Texture2D(CameraWidth, CameraHeight);
+            FullTexture2D = new Texture2D(Screen.width, Screen.height);
 
             CameraSetup(0, "Camera ScaledSpace");
             CameraSetup(1, "Camera 01");
@@ -64,13 +70,12 @@ namespace CactEye2
          * Purpose: This function will produce a single frame texture of what image is being looked
          * at through the telescope. 
          * Note: Need to modify behavior depending on what processor is currently active.
-         * Proposed arguement: CactEyeProcessor CPU
          */
-        public Texture2D UpdateTexture()
+        public Texture2D UpdateTexture(CactEyeProcessor CPU, RenderTexture RT, Texture2D Output)
         {
 
             RenderTexture CurrentRT = RenderTexture.active;
-            RenderTexture.active = ScopeRenderTexture;
+            RenderTexture.active = RT;
 
             //Update position of the cameras
             foreach (Camera Cam in CameraObject)
@@ -81,6 +86,7 @@ namespace CactEye2
                 Cam.transform.forward = CameraTransform.forward;
                 Cam.transform.rotation = CameraTransform.rotation;
                 Cam.fieldOfView = FieldOfView;
+                Cam.targetTexture = RT;
             }
 
             CameraObject[0].Render();
@@ -102,23 +108,30 @@ namespace CactEye2
             CameraObject[1].Render();
             CameraObject[2].Render();
 
-            ScopeTexture2D.ReadPixels(new Rect(0, 0, CameraWidth, CameraHeight), 0, 0);
-            ScopeTexture2D.Apply();
+            //Output.ReadPixels(new Rect(0, 0, CameraWidth, CameraHeight), 0, 0);
+            Output.ReadPixels(new Rect(0, 0, Output.width, Output.height), 0, 0);
+            Output = CPU.ApplyFilter("Standard", Output);
+            Output.Apply();
             RenderTexture.active = CurrentRT;
-
-            return ScopeTexture2D;
+            return Output;
         }
 
-        public Texture2D UpdateTexture(bool HasProcessor)
+        public Texture2D UpdateTexture(CactEyeProcessor CPU)
         {
-            if (HasProcessor)
+            if (CPU)
             {
-                return UpdateTexture();
+                return UpdateTexture(CPU, ScopeRenderTexture, ScopeTexture2D);
             }
             else
             {
                 return new Texture2D(CameraWidth, CameraHeight);
             }
+        }
+
+        public Texture2D TakeScreenshot(CactEyeProcessor CPU)
+        {
+            //Just for right now
+            return UpdateTexture(CPU, FullResolutionTexture, FullTexture2D);
         }
 
         /*

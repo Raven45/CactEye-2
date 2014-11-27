@@ -17,3 +17,11 @@ C:\Users\aburns2\Dropbox\CactEye2\CactEye2\bin\Debug\Assembly-CSharp-firstpass.d
 C:\Users\aburns2\Dropbox\CactEye2\CactEye2\obj\Debug\CactEye2.csprojResolveAssemblyReference.cache
 C:\Users\aburns2\Dropbox\CactEye2\CactEye2\obj\Debug\CactEye2.dll
 C:\Users\aburns2\Dropbox\CactEye2\CactEye2\obj\Debug\CactEye2.pdb
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\CactEye2.dll
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\CactEye2.pdb
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\TDx.TDxInput.dll
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\Mono.Cecil.dll
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.csprojResolveAssemblyReference.cache
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.dll
+C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.pdb
