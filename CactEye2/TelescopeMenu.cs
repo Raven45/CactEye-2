@@ -161,6 +161,13 @@ namespace CactEye2
 
             if (ActiveProcessor)
             {
+                //Close window down if we run out of power
+                if (!ActiveProcessor.IsActive())
+                {
+                    Toggle();
+                    ScreenMessages.PostScreenMessage("Image processor is out of power. Please restore power to telescope.", 6, ScreenMessageStyle.UPPER_CENTER);
+                }
+
                 //Zoom Feedback Label.
                 string LabelZoom = "Zoom/Magnification: x";
                 if (CameraModule.FieldOfView > 0.0064)
@@ -353,7 +360,7 @@ namespace CactEye2
                 {
                     //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
                     //ActiveProcessor.GenerateScienceReport(TakeScreenshot(ActiveProcessor.GetType()));
-                    Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
+                    Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, CameraModule.FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
                     timer = 0f;
                 }
             }

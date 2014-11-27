@@ -131,9 +131,17 @@ namespace CactEye2
 
             if (Active)
             {
-                part.RequestResource("ElectricCharge", consumeRate * TimeWarp.fixedDeltaTime);
-            }
+                double PowerDemand = part.RequestResource("ElectricCharge", consumeRate * TimeWarp.fixedDeltaTime);
 
+                //This may be a little pushing it, but the processors are set to be able to run so
+                //long as the craft provides at least 15% of their power demand. At power supplies
+                //less than 15%, the processor will undergo an ungraceful shutdown. This works so
+                //incredibly well that I'm very pleased with the results.
+                if (PowerDemand < 0.15 * consumeRate * TimeWarp.fixedDeltaTime)
+                {
+                    Active = false;
+                }
+            }
         }
 
         /* ************************************************************************************************

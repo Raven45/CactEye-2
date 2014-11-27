@@ -51,12 +51,12 @@ namespace CactEye2
 
             //This has a tendency to be rather tempermental. If a player is getting false "Scope not zoomed in far enough" errors,
             //then the values here will need to be adjusted.
-            else if (FOV > CactEyeAPI.bodySize[Target] * 60f)
+            else if (FOV > CactEyeAPI.bodySize[Target] * 50f)
             {
                 //Scope not zoomed in far enough
                 Debug.Log("CactEye 2: Wide Field Camera: Scope not zoomed in far enough.");
                 Debug.Log("CactEye 2: Wide Field Camera: " + FOV.ToString());
-                Debug.Log("CactEye 2: Wide Field Camera: " + (CactEyeAPI.bodySize[Target] * 60f).ToString());
+                Debug.Log("CactEye 2: Wide Field Camera: " + (CactEyeAPI.bodySize[Target] * 50f).ToString());
                 return Type + ": Scope not zoomed in far enough.";
             }
             else
