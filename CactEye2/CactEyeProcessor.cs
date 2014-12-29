@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CactEye2
 {
-    abstract class CactEyeProcessor: PartModule
+    abstract public class CactEyeProcessor: PartModule
     {
         [KSPField(isPersistant = false)]
         public string Type = "Default Processor";
@@ -24,10 +24,11 @@ namespace CactEye2
         public string ExperimentID = "Default Experiment";
 
         [KSPField(isPersistant = true)]
-        public bool Active = true;
+        public bool Active = false;
 
         protected List<ScienceData> StoredData = new List<ScienceData>();
-       
+
+        private Vector3d OriginalSunDirection;
 
         /* ************************************************************************************************
          * Function Name: GetProessorType
@@ -71,7 +72,7 @@ namespace CactEye2
          * Function Name: Die
          * Input: None
          * Output: None
-         * Purpose: This function will cause the processor to, quite literally, exploded. In the future,
+         * Purpose: This function will cause the processor to, quite literally, explode. In the future,
          * this function may be modified to either cause the part to explode or go into a "damaged" state
          * with the help of a dice roll. This is to help randomize the possible damage from pointing the
          * telescope at the sun.
@@ -102,7 +103,7 @@ namespace CactEye2
          * may become deprecated in the future. If not overriden by a sub class, no filter will be 
          * applied.
          * ************************************************************************************************/
-        public Texture2D ApplyFilter(string Filter, Texture2D InputTexture)
+        public virtual Texture2D ApplyFilter(string Filter, Texture2D InputTexture)
         {
             return InputTexture;
         }
@@ -153,6 +154,7 @@ namespace CactEye2
         public void ActivateProcessor()
         {
             Active = true;
+            //CorrectLightDirection();
             Debug.Log("CactEye 2: Processor activated! " + Active.ToString());
         }
 
@@ -165,6 +167,7 @@ namespace CactEye2
         public void DeactivateProcessor()
         {
             Active = false;
+            //RevertLightDirection();
             Debug.Log("CactEye 2: Processor deactivated!");
         }
 
@@ -198,6 +201,28 @@ namespace CactEye2
             sb.AppendLine("<color=#ffa500ff>Do not point directly at sun while activated!</color>");
 
             return sb.ToString();
+        }
+
+        private void CorrectLightDirection()
+        {
+
+            //if (FlightGlobals.activeTarget.GetType() == typeof(CelestialBody)
+            //    && FlightGlobals.activeTarget != FlightGlobals.getMainBody())
+            //{
+            Light SunReference = GameObject.Find("Sun").GetComponent<Light>();
+            Debug.Log("CactEye 2: SunReference: " + SunReference.type.ToString());
+                Sun.Instance.sunDirection = FlightGlobals.fetch.VesselTarget.GetTransform().position - FlightGlobals.Bodies[0].position;
+                Debug.Log("CactEye 2: OriginalSunDirection: " + OriginalSunDirection.ToString());
+                Debug.Log("CactEye 2: sunDirection: " + Sun.Instance.sunDirection.ToString());
+            //}
+        }
+
+        private void RevertLightDirection()
+        {
+            //if (OriginalSunDirection != null)
+            //{
+                Sun.Instance.sunDirection = OriginalSunDirection;
+            //}
         }
 
         #region Right Click Menu Options

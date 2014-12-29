@@ -14,17 +14,26 @@ namespace DistantObjectHook
 
         private List<CactEyeOptics> Optics = new List<CactEyeOptics>();
 
-        private void Awake()
+        private void Start()
         {
 
-            foreach (Part p in FlightGlobals.ActiveVessel.Parts)
+            if (Optics == null)
             {
-                CactEyeOptics optics = p.GetComponent<CactEyeOptics>();
-                if (optics != null)
+                Debug.Log("CactEye 2: DOEWrapper: Uh-oh, we have a problem. If you see this error, then you're gonna have a bad day.");
+            }
+
+            else
+            {
+                foreach (Part p in FlightGlobals.ActiveVessel.Parts)
                 {
-                    if (!Optics.Contains(optics))
+                    CactEyeOptics optics = p.GetComponent<CactEyeOptics>();
+                    if (optics != null)
                     {
-                        Optics.Add(optics);
+                        if (!Optics.Contains(optics))
+                        {
+                            Optics.Add(optics);
+
+                        }
                     }
                 }
             }
@@ -32,19 +41,26 @@ namespace DistantObjectHook
 
         private void Update()
         {
-            bool FlareEnable = true;
+
+            bool ExternalControl = false;
+            CactEyeOptics ActiveOptics = null;
 
             foreach (CactEyeOptics optics in Optics)
             {
-                if (optics.IsMenuEnabled())
+                //Check for when optics is null, this avoids an unknown exception
+                if (optics != null && optics.IsMenuEnabled())
                 {
-                    FlareEnable = false;
+                    ExternalControl = true;
+                    ActiveOptics = optics;
                 }
             }
 
-            /*****************************************************************
-             * Call to the FlareDraw class from Distant Object Enhancement.
-             * **************************************************************/
+            DistantObject.FlareDraw.SetExternalFOVControl(ExternalControl);
+
+            if (ExternalControl)
+            {
+                DistantObject.FlareDraw.SetFOV(ActiveOptics.GetFOV());
+            }
         }
     }
 }

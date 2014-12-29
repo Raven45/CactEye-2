@@ -42,11 +42,14 @@ namespace CactEye2
         public static string root = "";
         public static bool KASavailable = false;
 
+        private bool DoOnce = true;
+
         //There's a bug in here somewhere that only exists on Widnows platforms;
         //Mac users will never see the bug. It's a null arguement exception that's
         //being thrown somewhere that prevents the object from instantiating correctly.
         public void Awake()
         {
+
             //print("ROOTPATH: |" + KSPUtil.ApplicationRootPath);
 
             //root = KSPUtil.ApplicationRootPath.Replace("\\", "/");
@@ -112,6 +115,13 @@ namespace CactEye2
 
         public void Update()
         {
+            if (DoOnce)
+            {
+                Debug.Log("CactEye 2: sunDirection: " + Sun.Instance.sunDirection.ToString());
+                DoOnce = false;
+            }
+            
+
             foreach (CelestialBody body in FlightGlobals.Bodies)
             {
                 if (bodyDist.ContainsKey(body))

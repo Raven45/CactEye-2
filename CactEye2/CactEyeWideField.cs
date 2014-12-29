@@ -59,6 +59,13 @@ namespace CactEye2
                 Debug.Log("CactEye 2: Wide Field Camera: " + (CactEyeAPI.bodySize[Target] * 50f).ToString());
                 return Type + ": Scope not zoomed in far enough.";
             }
+
+            //Check to see if target is blocked.
+            else if (CactEyeAPI.CheckOccult(Target) != "")
+            {
+                return Type + ": Target is occulted by another body.";
+            }
+
             else
             {
                 float SciencePoints = 0f;

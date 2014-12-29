@@ -163,7 +163,7 @@ namespace CactEye2
             }
             catch
             {
-                Debug.Log(" CactEye 2: Unknown Exception");
+                Debug.Log(" CactEye 2: Unknown Exception. If this is thrown before the vessel is unpacked, then it can be safely ignored.");
                 return false;
             }
         }

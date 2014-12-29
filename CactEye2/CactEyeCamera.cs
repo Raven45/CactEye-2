@@ -25,7 +25,7 @@ namespace CactEye2
         private Texture2D FullTexture2D;
 
         //I wonder if C# has a map data structure; a map would simplify some things
-        private Camera[] CameraObject = { null, null, null };
+        private Camera[] CameraObject = { null, null, null, null, null };
 
         private Renderer[] skyboxRenderers;
         private ScaledSpaceFader[] scaledSpaceFaders;
@@ -55,6 +55,8 @@ namespace CactEye2
             CameraSetup(0, "Camera ScaledSpace");
             CameraSetup(1, "Camera 01");
             CameraSetup(2, "Camera 00");
+            CameraSetup(3, "Camera VE Underlay");
+            CameraSetup(4, "Camera VE Overlay");
 
             skyboxRenderers = (from Renderer r in (FindObjectsOfType(typeof(Renderer)) as IEnumerable<Renderer>) where (r.name == "XP" || r.name == "XN" || r.name == "YP" || r.name == "YN" || r.name == "ZP" || r.name == "ZN") select r).ToArray<Renderer>();
             scaledSpaceFaders = FindObjectsOfType(typeof(ScaledSpaceFader)) as ScaledSpaceFader[];  
@@ -80,13 +82,24 @@ namespace CactEye2
             //Update position of the cameras
             foreach (Camera Cam in CameraObject)
             {
-                //The if statement fixes a bug with the camera position and timewarp.
-                if (Cam.name.Contains("0"))
-                    Cam.transform.position = CameraTransform.position;
-                Cam.transform.forward = CameraTransform.forward;
-                Cam.transform.rotation = CameraTransform.rotation;
-                Cam.fieldOfView = FieldOfView;
-                Cam.targetTexture = RT;
+                if (Cam != null)
+                {
+                    //The if statement fixes a bug with the camera position and timewarp.
+                    if (Cam.name.Contains("0"))
+                    {
+                        //Cam.transform = CameraTransform;
+                        Cam.transform.position = CameraTransform.position;
+                    }
+                    Cam.transform.up = CameraTransform.up;
+                    Cam.transform.forward = CameraTransform.forward;
+                    Cam.transform.rotation = CameraTransform.rotation;
+                    Cam.fieldOfView = FieldOfView;
+                    Cam.targetTexture = RT;
+                }
+                else
+                {
+                    Debug.Log("CactEye 2: " + Cam.name.ToString() + " was not found!");
+                }
             }
 
             CameraObject[0].Render();
@@ -99,7 +112,7 @@ namespace CactEye2
                 s.r.enabled = true;
             }
             CameraObject[0].clearFlags = CameraClearFlags.Depth;
-            CameraObject[0].farClipPlane = 3e15f;
+            CameraObject[0].farClipPlane = 3e30f;
             CameraObject[0].Render();
             foreach (Renderer r in skyboxRenderers)
             {
@@ -174,13 +187,14 @@ namespace CactEye2
                 }
                 CameraObject[Index].CopyFrom(GetCameraByName(SourceName));
                 //CameraObject[Index].CopyFrom(Camera.main);
-                CameraObject[Index].enabled = false;
+                CameraObject[Index].enabled = true;
                 CameraObject[Index].targetTexture = ScopeRenderTexture;
 
                 CameraObject[Index].transform.position = CameraTransform.position;
                 CameraObject[Index].transform.forward = CameraTransform.forward;
-                CameraObject[Index].transform.rotation = CameraTransform.rotation;
+                //CameraObject[Index].transform.rotation = CameraTransform.rotation;
                 CameraObject[Index].fieldOfView = FieldOfView;
+                CameraObject[Index].farClipPlane = 3e30f;
             }
         }
 

@@ -56,7 +56,7 @@ namespace CactEye2
         private double storedTime = 0f;
 
         //Check for pause menu
-        private bool GameIsPaused = false;
+        //private bool GameIsPaused = false;
 
 
         public TelescopeMenu(Transform Position)
@@ -108,6 +108,11 @@ namespace CactEye2
                     //Grab Reaction Wheels
                     GetReactionWheels();
                     GetProcessors();
+
+                    if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
+                    {
+                        ActiveProcessor.ActivateProcessor();
+                    }
                 }
                 catch (Exception E)
                 {
@@ -115,14 +120,20 @@ namespace CactEye2
                     Debug.Log(E.ToString());
                 }
 
-                ActiveProcessor.ActivateProcessor();
                 RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
             }
  
             else
             {
-                ActiveProcessor.DeactivateProcessor();
-                ActiveProcessor = null;
+                if (ActiveProcessor != null)
+                {
+                    if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
+                    {
+                        ActiveProcessor.DeactivateProcessor();
+                    }
+                    ActiveProcessor = null;
+                }
+
                 RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
             }
             IsGUIVisible = !IsGUIVisible;
@@ -164,8 +175,11 @@ namespace CactEye2
                 //Close window down if we run out of power
                 if (!ActiveProcessor.IsActive())
                 {
-                    Toggle();
-                    ScreenMessages.PostScreenMessage("Image processor is out of power. Please restore power to telescope.", 6, ScreenMessageStyle.UPPER_CENTER);
+                //    Toggle();
+                //    ScreenMessages.PostScreenMessage("Image processor is out of power. Please restore power to telescope.", 6, ScreenMessageStyle.UPPER_CENTER);
+                    ActiveProcessor = null;
+                    Notification = "Image Processor is out of power. Please restore power to telescope";
+                    timer = 0f;
                 }
 
                 //Zoom Feedback Label.
@@ -284,7 +298,7 @@ namespace CactEye2
 
         public float GetFOV()
         {
-            return FieldOfView;
+            return CameraModule.FieldOfView;
         }
 
         /* ************************************************************************************************
@@ -453,7 +467,11 @@ namespace CactEye2
             if (Processors.Count<CactEyeProcessor>() > 0)
             {
                 ActiveProcessor = Processors.First<CactEyeProcessor>();
-                ActiveProcessor.Active = true;
+
+                //if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
+                //{
+                //    ActiveProcessor.Active = true;
+                //}
             }
         }
 
