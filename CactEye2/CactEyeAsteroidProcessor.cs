@@ -85,7 +85,7 @@ namespace CactEye2
                     SciencePoints *= 0.1f;
                 }
 
-                ScienceData Data = new ScienceData(AsteroidExperiment.baseValue, 1f, 0f, AsteroidSubject.id, Type + " " + TargetName + " Observation");
+                ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, AsteroidSubject.id, Type + " " + TargetName + " Observation");
                 StoredData.Add(Data);
                 ReviewData(Data, Screenshot);
                 return "";

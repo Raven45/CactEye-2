@@ -45,6 +45,7 @@ namespace CactEye2
         //private ModuleReactionWheel[] ReactionWheels;
         private List<CactEyeProcessor> Processors = new List<CactEyeProcessor>();
         private CactEyeProcessor ActiveProcessor;
+        private int CurrentProcessorIndex = 0;
         private List<CactEyeGyro> ReactionWheels = new List<CactEyeGyro>();
         private List<float> ReactionWheelPitchTorques = new List<float>();
         private List<float> ReactionWheelYawTorques = new List<float>();
@@ -374,7 +375,17 @@ namespace CactEye2
                 {
                     //DisplayText("Saved screenshot to " + opticsModule.GetTex(true, targetName));
                     //ActiveProcessor.GenerateScienceReport(TakeScreenshot(ActiveProcessor.GetType()));
-                    Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, CameraModule.FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
+                    try
+                    {
+                        Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, CameraModule.FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
+                    }
+                    catch (Exception e)
+                    {
+                        Notification = "An error occured. Please post that you're having this error on the official CactEye 2 thread on the Kerbal Forums.";
+                        Debug.Log("CactEye 2: Exception #: An error occured producing a science report!");
+                        Debug.Log(e.ToString());
+                    }
+
                     timer = 0f;
                 }
             }
@@ -386,13 +397,17 @@ namespace CactEye2
                 //Previous button
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) - 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Back9Icon))
                 {
+                    ActiveProcessor.Active = false;
                     ActiveProcessor = GetPrevious(Processors, ActiveProcessor);
+                    ActiveProcessor.Active = true;
                 }
 
                 //Next Button
                 if (GUI.Button(new Rect(ScopeRect.xMin + ((0.5f * ScopeRect.width) + 72), ScopeRect.yMin + (ScopeRect.height - 48f), 32, 32), Forward9Icon))
                 {
+                    ActiveProcessor.Active = false;
                     ActiveProcessor = GetNext(Processors, ActiveProcessor);
+                    ActiveProcessor.Active = true;
                 }
             }
         }
@@ -467,6 +482,7 @@ namespace CactEye2
             if (Processors.Count<CactEyeProcessor>() > 0)
             {
                 ActiveProcessor = Processors.First<CactEyeProcessor>();
+                CurrentProcessorIndex = 0;
 
                 //if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
                 //{
@@ -492,27 +508,59 @@ namespace CactEye2
         }
 
 
-        private static CactEyeProcessor GetNext<CactEyeProcessor>(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
+        private CactEyeProcessor GetNext(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
         {
             try
             {
-                return list.SkipWhile(x => !x.Equals(current)).Skip(1).First();
+                //return list.SkipWhile(x => !x.Equals(current)).Skip(1).First();
+                //lastAgentIDAarhus = agents[ index == -1 ? 0 : index % ( agents.Count - 1 ) ];
+                if ((CurrentProcessorIndex + 1) < Processors.Count)
+                {
+                    CurrentProcessorIndex++;
+                }
+                else
+                {
+                    CurrentProcessorIndex = 0;
+                }
+
+                //return Processors[CurrentProcessorIndex == -1 ? 0 : CurrentProcessorIndex % (Processors.Count - 1)];
+                Debug.Log("CactEye 2: CurrentProcessorIndex: " + CurrentProcessorIndex.ToString());
+                return Processors[CurrentProcessorIndex];
             }
-            catch
+            catch (Exception e)
             {
-                return default(CactEyeProcessor);
+                Debug.Log("CactEye 2: Exception #: Was not able to find the next processor, even though there is one.");
+                Debug.Log(e.ToString());
+
+                return Processors.FirstOrDefault();
             }
         }
 
-        private static CactEyeProcessor GetPrevious<CactEyeProcessor>(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
+        private CactEyeProcessor GetPrevious(IEnumerable<CactEyeProcessor> list, CactEyeProcessor current)
         {
             try
             {
-                return list.TakeWhile(x => !x.Equals(current)).Last();
+                //return list.SkipWhile(x => !x.Equals(current)).Skip(1).First();
+                //lastAgentIDAarhus = agents[ index == -1 ? 0 : index % ( agents.Count - 1 ) ];
+                if (CurrentProcessorIndex == 0)
+                {
+                    CurrentProcessorIndex = Processors.Count - 1;
+                }
+                else
+                {
+                    CurrentProcessorIndex--;
+                }
+
+                //return Processors[CurrentProcessorIndex == -1 ? 0 : CurrentProcessorIndex % (Processors.Count - 1)];
+                Debug.Log("CactEye 2: CurrentProcessorIndex: " + CurrentProcessorIndex.ToString());
+                return Processors[CurrentProcessorIndex];
             }
-            catch
+            catch (Exception e)
             {
-                return default(CactEyeProcessor);
+                Debug.Log("CactEye 2: Exception #: Was not able to find the next processor, even though there is one.");
+                Debug.Log(e.ToString());
+
+                return Processors.FirstOrDefault();
             }
         }
 

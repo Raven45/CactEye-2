@@ -68,27 +68,39 @@ namespace CactEye2
 
             else
             {
+
                 float SciencePoints = 0f;
                 string TargetName = Target.name;
-                ScienceExperiment WideFieldExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
-                ScienceSubject WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Target, "");
+                ScienceExperiment WideFieldExperiment;
+                ScienceSubject WideFieldSubject;
 
-                SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
-
-                //These two lines cause a bug where the experiment gives an infinite supply of science points.
-                //WideFieldSubject.scientificValue = 1f;
-                //WideFieldSubject.science = 0f;
-
-                Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
-
-                if (IsSmallOptics)
+                try
                 {
-                    SciencePoints *= 0.1f;
+                    WideFieldExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
+                    WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Target, "");
+
+                    SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
+
+                    Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+
+                    if (IsSmallOptics)
+                    {
+                        SciencePoints *= 0.1f;
+                    }
+
+                    ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, WideFieldSubject.id, Type + " " + TargetName + " Observation");
+                    StoredData.Add(Data);
+                    ReviewData(Data, Screenshot);
                 }
 
-                ScienceData Data = new ScienceData(WideFieldExperiment.baseValue, 1f, 0f, WideFieldSubject.id, Type + " " + TargetName + " Observation");
-                StoredData.Add(Data);
-                ReviewData(Data, Screenshot);
+                catch (Exception e)
+                {
+                    Debug.Log("CactEye 2: Excpetion #: Was not able to find Experiment with ExperimentID: " + ExperimentID.ToString());
+                    Debug.Log(e.ToString());
+
+                    return "An error occurred. Please post on the Official CactEye 2 thread on the Kerbal Forums.";
+                }
+
                 return "";
             }
         }
