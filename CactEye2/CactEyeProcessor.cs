@@ -30,6 +30,11 @@ namespace CactEye2
 
         private Vector3d OriginalSunDirection;
 
+        private GUIStyle ScienceStyle;
+        private GUIStyle ProgressStyle;
+        private GUISkin SkinStored;
+        private GUIStyleState StyleDefault;
+
         /* ************************************************************************************************
          * Function Name: GetProessorType
          * Input: None
@@ -241,6 +246,7 @@ namespace CactEye2
         private void _onPageDiscard(ScienceData Data)
         {
             StoredData.Remove(Data);
+            ResetExperimentGUI();
             return;
         }
 
@@ -254,6 +260,7 @@ namespace CactEye2
         private void _onPageKeep(ScienceData Data)
         {
             StoredData.Add(Data);
+            ResetExperimentGUI();
             return;
         }
 
@@ -274,6 +281,8 @@ namespace CactEye2
             {
                 AvailableTransmitters.FirstOrDefault().TransmitData(new List<ScienceData>{ Data });
             }
+
+            ResetExperimentGUI();
         }
 
         /* ************************************************************************************************
@@ -286,6 +295,7 @@ namespace CactEye2
          * ************************************************************************************************/
         private void _onPageSendToLab(ScienceData Data)
         {
+            ResetExperimentGUI();
             return;
         }
 
@@ -315,7 +325,7 @@ namespace CactEye2
             yield return new WaitForEndOfFrame();
 
             //GUIStyle ProgressStyle;
-            GUIStyle ScienceStyle;
+            //GUIStyle ScienceStyle;
             
             ExperimentResultDialogPage page = new ExperimentResultDialogPage
                 (
@@ -336,12 +346,11 @@ namespace CactEye2
             //page.scienceValue = 0f;
             ExperimentsResultDialog ScienceDialog = ExperimentsResultDialog.DisplayResult(page);
 
-            //Causes a rather interesting exception.
-            //ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFilled2").First();
-            //ProgressStyle.fixedWidth = 0.1f;
-            //ProgressStyle.border = new RectOffset(0, 0, 0, 0);
-            //ProgressStyle.overflow = new RectOffset(0, 0, 0, 0);
-
+            //Store the old dialog gui information
+            ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFill2").First();
+            GUIStyle style = ScienceDialog.guiSkin.box;
+            StyleDefault = style.normal;
+            SkinStored = ScienceDialog.guiSkin;
 
             ////Lets put a pretty picture on the science dialog.
             ScienceStyle = ScienceDialog.guiSkin.box;
@@ -352,6 +361,27 @@ namespace CactEye2
             ScienceStyle.fixedHeight = 288f;
 
             
+        }
+
+
+        private void ResetExperimentGUI()
+        {
+            //print("Resetting GUI...");
+            if (SkinStored != null)
+            {
+                SkinStored.box.normal = StyleDefault;
+                SkinStored.box.normal.background = GameDatabase.Instance.GetTexture("CactEye/Icons/ExperimentGUIBackground", false);
+                SkinStored.box.fixedWidth = 0f;
+                SkinStored.box.fixedHeight = 0f;
+                SkinStored.window.fixedWidth = 400f;
+            }
+            else
+            {
+                Debug.Log("CactEye 2: Error #: SkinStored is null!");
+            }
+
+            ScienceStyle.fixedHeight = 0f;
+            ScienceStyle.fixedWidth = 0f;
         }
 
         #endregion
