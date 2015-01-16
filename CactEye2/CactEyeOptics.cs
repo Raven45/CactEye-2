@@ -56,7 +56,7 @@ namespace CactEye2
             catch (Exception E)
             {
                 //Error = true;
-                Debug.Log("CactEye 2: Exception 1: Was not able to create the Telescope Control Menu object. You should try re-installing CactEye2 and ensure that old versions of CactEye are deleted.");
+                Debug.Log("CactEye 2: Exception 1:  Was not able to create the Telescope Control Menu object. You should try re-installing CactEye2 and ensure that old versions of CactEye are deleted.");
                 Debug.Log(E.ToString());
                 Debug.Log(temp.ToString());
             }

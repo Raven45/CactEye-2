@@ -95,7 +95,7 @@ namespace CactEye2
 
                 catch (Exception e)
                 {
-                    Debug.Log("CactEye 2: Excpetion #: Was not able to find Experiment with ExperimentID: " + ExperimentID.ToString());
+                    Debug.Log("CactEye 2: Excpetion 5: Was not able to find Experiment with ExperimentID: " + ExperimentID.ToString());
                     Debug.Log(e.ToString());
 
                     return "An error occurred. Please post on the Official CactEye 2 thread on the Kerbal Forums.";

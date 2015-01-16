@@ -110,10 +110,12 @@ namespace CactEye2
                     GetReactionWheels();
                     GetProcessors();
 
-                    if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
-                    {
-                        ActiveProcessor.ActivateProcessor();
-                    }
+                    //if (ActiveProcessor.GetProcessorType().Contains("Wide Field"))
+                    //{
+                    //    ActiveProcessor.ActivateProcessor();
+                    //}
+
+                    ActiveProcessor.ActivateProcessor();
                 }
                 catch (Exception E)
                 {
@@ -382,7 +384,7 @@ namespace CactEye2
                     catch (Exception e)
                     {
                         Notification = "An error occured. Please post that you're having this error on the official CactEye 2 thread on the Kerbal Forums.";
-                        Debug.Log("CactEye 2: Exception #: An error occured producing a science report!");
+                        Debug.Log("CactEye 2: Exception 4: An error occured producing a science report!");
                         Debug.Log(e.ToString());
                     }
 

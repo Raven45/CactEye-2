@@ -137,13 +137,14 @@ namespace CactEye2
 
             if (Active)
             {
-                double PowerDemand = part.RequestResource("ElectricCharge", consumeRate * TimeWarp.fixedDeltaTime);
+                double PowerDemand = part.RequestResource("ElectricCharge", consumeRate * TimeWarp.deltaTime);
+                //Debug.Log("CactEye 2: PowerDemand: " + PowerDemand.ToString());
 
                 //This may be a little pushing it, but the processors are set to be able to run so
                 //long as the craft provides at least 15% of their power demand. At power supplies
                 //less than 15%, the processor will undergo an ungraceful shutdown. This works so
                 //incredibly well that I'm very pleased with the results.
-                if (PowerDemand < 0.15 * consumeRate * TimeWarp.fixedDeltaTime)
+                if (PowerDemand < 0.15 * consumeRate * TimeWarp.deltaTime)
                 {
                     Active = false;
                 }
@@ -169,7 +170,7 @@ namespace CactEye2
          * Output: None
          * Purpose: This function will allow other classes to deactivate the processor. 
          * ************************************************************************************************/
-        public void DeactivateProcessor()
+        public virtual void DeactivateProcessor()
         {
             Active = false;
             //RevertLightDirection();
@@ -279,7 +280,7 @@ namespace CactEye2
 
             if (AvailableTransmitters.Count() > 0)
             {
-                AvailableTransmitters.FirstOrDefault().TransmitData(new List<ScienceData>{ Data });
+                AvailableTransmitters.First().TransmitData(new List<ScienceData>{ Data });
             }
 
             ResetExperimentGUI();
@@ -295,6 +296,13 @@ namespace CactEye2
          * ************************************************************************************************/
         private void _onPageSendToLab(ScienceData Data)
         {
+            //List<ModuleScienceLab> AvailableLabs = vessel.FindPartModulesImplementing<ModuleScienceLab>();
+
+            //if (AvailableLabs.Count() > 0)
+            //{
+            //    AvailableLabs.First().ProcessData(Data, ReviewData2);
+            //}
+
             ResetExperimentGUI();
             return;
         }
@@ -377,7 +385,7 @@ namespace CactEye2
             }
             else
             {
-                Debug.Log("CactEye 2: Error #: SkinStored is null!");
+                Debug.Log("CactEye 2: Logical Error 3: SkinStored is null!");
             }
 
             ScienceStyle.fixedHeight = 0f;

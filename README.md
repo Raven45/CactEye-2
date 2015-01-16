@@ -14,6 +14,18 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
+CactEye 2 BETA 5
+-Fixed an issue where the telescope would throw an incorrect "out of power" message when the telescope was 
+equipped with both an asteroid and a wide field processor. 
+-Fixed an issue where the probe core did not have a SAS module, again...
+-Fixed an issue where the processors do not consume power. 
+-Added Remote Tech support to the probe core.
+-Added KSP-AVC support.
+
+CactEye 2 BETA 4
+-Fixed an issue where the science dialog would not reset after running an experiment with a CactEye processor;
+the symptom of this was a CactEye screenshot showing in a science dialog after running an unrelated experiment.
+
 CactEye 2 BETA 3
 -Fixed an issue where running a science experiment with either the "Wide Field Camera 1" or
 "Wide Field Camera 2" would produce a "NullReferenceException."

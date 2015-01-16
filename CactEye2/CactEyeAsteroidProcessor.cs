@@ -38,6 +38,29 @@ namespace CactEye2
             return DiscoveryRate;
         }
 
+        /* ************************************************************************************************
+         * Function Name: DeactivateProcessor
+         * Input: None
+         * Output: None
+         * Purpose: This function will allow other classes to deactivate the processor. 
+         * ************************************************************************************************/
+        public override void DeactivateProcessor()
+        {
+
+            if (ScannerActive)
+            {
+                return;
+            }
+
+            else
+            {
+                Active = false;
+                Debug.Log("CactEye 2: Processor deactivated!");
+            }
+
+            //RevertLightDirection();
+        }
+
         public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
         {
 
