@@ -4,15 +4,24 @@ folder before installing a new version.
 
 Extract the enclosed files to your GameData folder. 
 
-Included is another folder entitled "Compatibility Patch for Distant Object v1.5.1," this is needed
-only if you are running Distant Object v1.5.1. The contents of that folder contains a compatibility 
-patch that makes CactEye 2 fully compatible with Distant Object 1.5.1. If you are not using 
-Distant Object, then the patch is not needed and will introduce unneccesary log spam. 
+Included is another folder entitled "Compatibility Patch for Distant Object v1.5.4," this is needed
+only if you are running Distant Object v1.5.4. The contents of that folder contains a compatibility 
+patch that makes CactEye 2 fully compatible with Distant Object 1.5.4. If you are not using 
+Distant Object, then the patch is not needed and will introduce unnecessary log spam. 
 
 To install the Compatibility patch for Distant Object Enhancement, extract the contents of the 
-"Compatibility Patch for Distant Object v1.5.1" folder to your GameData folder.
+"Compatibility Patch for Distant Object v1.5.4" folder to your GameData folder.
 
 ******************Change Log******************
+
+CactEye 2 BETA 5.1
+-Compatibility update for KSP 1.0
+-Compatibility update for Distant Object Enhancement 1.5.4
+-Added support for Outer Planets Mod, thanks to ImAHungryMan!
+-Removed the CactEye agency, for now. This was to prevent KSP from breaking if CactEye is removed. 
+This could break existing save games, you have been warned. The agency will be added back in a future
+update as other modders and I figure out a better way to manage custom agencies without ruining 
+people's save games.
 
 CactEye 2 BETA 5
 -Fixed an issue where the telescope would throw an incorrect "out of power" message when the telescope was 
