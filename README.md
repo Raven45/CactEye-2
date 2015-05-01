@@ -14,6 +14,10 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
+CactEye 2 BETA 5.2
+-Fixed attachment node issues on some of the structural parts.
+-Added an example of the large telescope per a request on the forums.
+
 CactEye 2 BETA 5.1
 -Compatibility update for KSP 1.0
 -Compatibility update for Distant Object Enhancement 1.5.4
