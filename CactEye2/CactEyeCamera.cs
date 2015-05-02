@@ -25,7 +25,7 @@ namespace CactEye2
         private Texture2D FullTexture2D;
 
         //I wonder if C# has a map data structure; a map would simplify some things
-        private Camera[] CameraObject = { null, null, null, null, null };
+        private Camera[] CameraObject = { null, null, null, null, null, null };
 
         private Renderer[] skyboxRenderers;
         private ScaledSpaceFader[] scaledSpaceFaders;
@@ -52,14 +52,26 @@ namespace CactEye2
             ScopeTexture2D = new Texture2D(CameraWidth, CameraHeight);
             FullTexture2D = new Texture2D(Screen.width, Screen.height);
 
-            CameraSetup(0, "Camera ScaledSpace");
-            CameraSetup(1, "Camera 01");
-            CameraSetup(2, "Camera 00");
-            CameraSetup(3, "Camera VE Underlay");
-            CameraSetup(4, "Camera VE Overlay");
+            CameraSetup(0, "GalaxyCamera"); //As of KSP 1.0, the GalaxyCamera object was added. Thanks to MOARDv for figuring this one out.
+            CameraSetup(1, "Camera ScaledSpace");
+            CameraSetup(2, "Camera 01");
+            CameraSetup(3, "Camera 00");
+            CameraSetup(4, "Camera VE Underlay");
+            CameraSetup(5, "Camera VE Overlay");
 
             skyboxRenderers = (from Renderer r in (FindObjectsOfType(typeof(Renderer)) as IEnumerable<Renderer>) where (r.name == "XP" || r.name == "XN" || r.name == "YP" || r.name == "YN" || r.name == "ZP" || r.name == "ZN") select r).ToArray<Renderer>();
-            scaledSpaceFaders = FindObjectsOfType(typeof(ScaledSpaceFader)) as ScaledSpaceFader[];  
+            if (skyboxRenderers == null)
+            {
+                Debug.Log("CactEye 2: Logical Error: skyboxRenderers is null!");
+            }
+
+            scaledSpaceFaders = FindObjectsOfType(typeof(ScaledSpaceFader)) as ScaledSpaceFader[];
+            if (scaledSpaceFaders == null)
+            {
+                Debug.Log("CactEye 2: Logical Error: scaledSpaceFaders is null!");
+            }
+
+            
         }
 
 
@@ -103,6 +115,7 @@ namespace CactEye2
             }
 
             CameraObject[0].Render();
+            CameraObject[1].Render();
             foreach (Renderer r in skyboxRenderers)
             {
                 r.enabled = false;
@@ -111,17 +124,16 @@ namespace CactEye2
             {
                 s.r.enabled = true;
             }
-            CameraObject[0].clearFlags = CameraClearFlags.Depth;
-            CameraObject[0].farClipPlane = 3e30f;
-            CameraObject[0].Render();
+            CameraObject[1].clearFlags = CameraClearFlags.Depth;
+            CameraObject[1].farClipPlane = 3e30f;
+            CameraObject[1].Render();
             foreach (Renderer r in skyboxRenderers)
             {
                 r.enabled = true;
             }
-            CameraObject[1].Render();
             CameraObject[2].Render();
+            CameraObject[3].Render();
 
-            //Output.ReadPixels(new Rect(0, 0, CameraWidth, CameraHeight), 0, 0);
             Output.ReadPixels(new Rect(0, 0, Output.width, Output.height), 0, 0);
             Output = CPU.ApplyFilter("Standard", Output);
             Output.Apply();
@@ -178,7 +190,12 @@ namespace CactEye2
             }
             else
             {
+
                 GameObject CameraBody = new GameObject("CactEye " + SourceName);
+                if (CameraBody == null)
+                {
+                    Debug.Log("CactEye 2: logical Error: CameraBody was null!");
+                }
                 CameraBody.name = "CactEye 2" + SourceName;
                 CameraObject[Index] = CameraBody.AddComponent<Camera>();
                 if (CameraObject[Index] == null)
@@ -186,15 +203,23 @@ namespace CactEye2
                     Debug.Log("CactEye 2: Logical Error 1: CameraBody.AddComponent returned null! If you do not have Visual Enhancements installed, then this error can be safely ignored.");
                 }
                 CameraObject[Index].CopyFrom(GetCameraByName(SourceName));
-                //CameraObject[Index].CopyFrom(Camera.main);
                 CameraObject[Index].enabled = true;
                 CameraObject[Index].targetTexture = ScopeRenderTexture;
 
-                CameraObject[Index].transform.position = CameraTransform.position;
-                CameraObject[Index].transform.forward = CameraTransform.forward;
-                //CameraObject[Index].transform.rotation = CameraTransform.rotation;
-                CameraObject[Index].fieldOfView = FieldOfView;
-                CameraObject[Index].farClipPlane = 3e30f;
+                if (Index == 0)
+                {
+                    //CameraObject[Index].enabled = false;
+                }
+                else if (Index == 2 || Index == 3)
+                {
+                    CameraObject[Index].cullingMask = (1 << 0) | (1 << 15) | (1 << 18) | (1 << 19) | (1 << 23);
+                    CameraObject[Index].transform.position = CameraTransform.position;
+                    CameraObject[Index].transform.forward = CameraTransform.forward;
+                    CameraObject[Index].transform.rotation = CameraTransform.rotation;
+                    CameraObject[Index].fieldOfView = FieldOfView;
+                    CameraObject[Index].farClipPlane = 3e30f;
+                }
+                Debug.Log("CactEye 2: Debug: Camera[" + Index.ToString() + "]: " + CameraObject[Index].cullingMask.ToString());
             }
         }
 
