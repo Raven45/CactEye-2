@@ -210,15 +210,18 @@ namespace CactEye2
                 //{
                     //CameraObject[Index].enabled = false;
                 //}
-                //else if (Index == 2 || Index == 3)
-                //{
-                    //CameraObject[Index].cullingMask = (1 << 0) | (1 << 15) | (1 << 18) | (1 << 19) | (1 << 23);
+                if (Index == 2 || Index == 3)
+                {
+                    CameraObject[Index].cullingMask = (1 << 0) | (1 << 15) | (1 << 18) | (1 << 19) | (1 << 23);
+                }
+                if (Index != 0)
+                {
                     CameraObject[Index].transform.position = CameraTransform.position;
                     CameraObject[Index].transform.forward = CameraTransform.forward;
                     CameraObject[Index].transform.rotation = CameraTransform.rotation;
                     CameraObject[Index].fieldOfView = FieldOfView;
                     CameraObject[Index].farClipPlane = 3e30f;
-                //}
+                }
                 //Debug.Log("CactEye 2: Debug: Camera[" + Index.ToString() + "]: " + CameraObject[Index].cullingMask.ToString());
             }
         }

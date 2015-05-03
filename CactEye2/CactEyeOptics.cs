@@ -60,6 +60,11 @@ namespace CactEye2
                 Debug.Log(E.ToString());
                 Debug.Log(temp.ToString());
             }
+
+            if (IsSmallOptics && !IsDamaged)
+            {
+                IsFunctional = true;
+            }
         }
 
         /* ************************************************************************************************
