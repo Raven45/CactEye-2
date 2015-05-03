@@ -44,8 +44,15 @@ namespace CactEye2
         public override void OnStart(StartState state)
         {
 
-            //tie-in with Firespitter.
-            opticsAnimate = GetComponent<ModuleAnimateGeneric>();
+            if (!IsSmallOptics)
+            {
+                //tie-in with Firespitter.
+                opticsAnimate = GetComponent<ModuleAnimateGeneric>();
+            }
+            else
+            {
+                Events["OpenSmallAperture"].active = true;
+            }
 
             //Attempt to instantiate the GUI
             Transform temp = part.FindModelTransform(CameraTransformName);
@@ -61,10 +68,15 @@ namespace CactEye2
                 Debug.Log(temp.ToString());
             }
 
-            if (IsSmallOptics && !IsDamaged)
+            if (IsSmallOptics && SmallApertureOpen && !IsDamaged)
             {
                 IsFunctional = true;
             }
+
+            Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
+            Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
+            Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
+            Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
         }
 
         /* ************************************************************************************************
@@ -89,7 +101,7 @@ namespace CactEye2
             //If the scope isn't damage, then toggle scope functionality based on the aperture.
             else
             {
-                if (opticsAnimate != null)
+                if (opticsAnimate != null && !IsSmallOptics)
                 {
                     if (opticsAnimate.animTime < 0.5 && IsFunctional)
                     {
@@ -242,6 +254,7 @@ namespace CactEye2
         public void FixScope()
         {
             IsDamaged = false;
+            IsFunctional = true;
             Events["FixScope"].active = false;
         }
 
@@ -256,6 +269,7 @@ namespace CactEye2
         public void OpenSmallAperture()
         {
             SmallApertureOpen = true;
+            IsFunctional = true;
             Events["OpenSmallAperture"].active = false;
         }
     }

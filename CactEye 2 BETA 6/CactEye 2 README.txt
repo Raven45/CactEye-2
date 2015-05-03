@@ -14,6 +14,13 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
+CactEye 2 BETA 6
+-Fixed an issue where the skybox would not be visible in pictures taken with a CactEye telescope.
+-Fixed a timewarp issue with the skybox.
+-Fixed an issue where the FungEye telescope would not explode when pointed at the sun.
+-Added contracts!
+-Added an example craft of the small telescope.
+
 CactEye 2 BETA 5.2
 -Fixed attachment node issues on some of the structural parts.
 -Added an example of the large telescope per a request on the forums.
