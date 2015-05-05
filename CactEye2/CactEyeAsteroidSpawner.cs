@@ -117,8 +117,12 @@ namespace CactEye2
                         //int.TryParse(cpu.moduleValues.GetValue("DiscoveryRate"), out PartDiscoveryRate);
 
                         GlobalDiscoveryRate -= PartDiscoveryRate;
-                        Debug.Log("CactEye 2: Asteroid Spawner: Asteroid Processor Found!");
-                        Debug.Log("CactEye 2: Asteroid Spawner: Discovery rate: " + PartDiscoveryRate.ToString());
+
+                        if (CactEyeConfig.DebugMode)
+                        {
+                            Debug.Log("CactEye 2: Asteroid Spawner: Asteroid Processor Found!");
+                            Debug.Log("CactEye 2: Asteroid Spawner: Discovery rate: " + PartDiscoveryRate.ToString());
+                        }
                     }
                 }
 
@@ -180,7 +184,11 @@ namespace CactEye2
                     ScenarioDiscoverableObjects AsteroidSpawner = (ScenarioDiscoverableObjects)HighLogic.CurrentGame.scenarios.Find(scenario => scenario.moduleRef is ScenarioDiscoverableObjects).moduleRef;
 
                     AsteroidSpawner.spawnOddsAgainst = GlobalDiscoveryRate;
-                    Debug.Log("CactEye 2: Asteroid Spawner: spawnOddsAgainst = " + AsteroidSpawner.spawnOddsAgainst.ToString());
+
+                    if (CactEyeConfig.DebugMode)
+                    {
+                        Debug.Log("CactEye 2: Asteroid Spawner: spawnOddsAgainst = " + AsteroidSpawner.spawnOddsAgainst.ToString());
+                    }
                 }
                 catch (Exception e)
                 {

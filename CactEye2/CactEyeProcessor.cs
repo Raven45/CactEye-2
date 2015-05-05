@@ -161,7 +161,10 @@ namespace CactEye2
         {
             Active = true;
             //CorrectLightDirection();
-            Debug.Log("CactEye 2: Processor activated! " + Active.ToString());
+            if (CactEyeConfig.DebugMode)
+            {
+                Debug.Log("CactEye 2: Processor activated! " + Active.ToString());
+            }
         }
 
         /* ************************************************************************************************
@@ -174,7 +177,10 @@ namespace CactEye2
         {
             Active = false;
             //RevertLightDirection();
-            Debug.Log("CactEye 2: Processor deactivated!");
+            if (CactEyeConfig.DebugMode)
+            {
+                Debug.Log("CactEye 2: Processor deactivated!");
+            }
         }
 
         /* ************************************************************************************************
@@ -215,11 +221,22 @@ namespace CactEye2
             //if (FlightGlobals.activeTarget.GetType() == typeof(CelestialBody)
             //    && FlightGlobals.activeTarget != FlightGlobals.getMainBody())
             //{
+
             Light SunReference = GameObject.Find("Sun").GetComponent<Light>();
-            Debug.Log("CactEye 2: SunReference: " + SunReference.type.ToString());
-                Sun.Instance.sunDirection = FlightGlobals.fetch.VesselTarget.GetTransform().position - FlightGlobals.Bodies[0].position;
+
+            if (CactEyeConfig.DebugMode)
+            {
+                Debug.Log("CactEye 2: SunReference: " + SunReference.type.ToString());
+            }
+
+            Sun.Instance.sunDirection = FlightGlobals.fetch.VesselTarget.GetTransform().position - FlightGlobals.Bodies[0].position;
+
+            if (CactEyeConfig.DebugMode)
+            {
                 Debug.Log("CactEye 2: OriginalSunDirection: " + OriginalSunDirection.ToString());
                 Debug.Log("CactEye 2: sunDirection: " + Sun.Instance.sunDirection.ToString());
+            }
+
             //}
         }
 

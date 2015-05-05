@@ -526,12 +526,16 @@ namespace CactEye2
                 }
 
                 //return Processors[CurrentProcessorIndex == -1 ? 0 : CurrentProcessorIndex % (Processors.Count - 1)];
-                Debug.Log("CactEye 2: CurrentProcessorIndex: " + CurrentProcessorIndex.ToString());
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: CurrentProcessorIndex: " + CurrentProcessorIndex.ToString());
+                }
+
                 return Processors[CurrentProcessorIndex];
             }
             catch (Exception e)
             {
-                Debug.Log("CactEye 2: Exception #: Was not able to find the next processor, even though there is one.");
+                Debug.Log("CactEye 2: Exception 6: Was not able to find the next processor, even though there is one.");
                 Debug.Log(e.ToString());
 
                 return Processors.FirstOrDefault();

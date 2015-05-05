@@ -55,7 +55,11 @@ namespace CactEye2
             else
             {
                 Active = false;
-                Debug.Log("CactEye 2: Processor deactivated!");
+
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Processor deactivated!");
+                }
             }
 
             //RevertLightDirection();
@@ -101,7 +105,10 @@ namespace CactEye2
                 //WideFieldSubject.scientificValue = 1f;
                 //WideFieldSubject.science = 0f;
 
-                Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+                }
 
                 if (IsSmallOptics)
                 {

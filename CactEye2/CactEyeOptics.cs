@@ -73,10 +73,13 @@ namespace CactEye2
                 IsFunctional = true;
             }
 
-            //Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
-            //Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
-            //Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
-            //Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
+            if (CactEyeConfig.DebugMode)
+            {
+                Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
+                Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
+                Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
+                Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
+            }
         }
 
         /* ************************************************************************************************

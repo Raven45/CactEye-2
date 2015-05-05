@@ -33,19 +33,28 @@ namespace CactEye2
             if (FlightGlobals.fetch.VesselTarget.GetType().Name != "CelestialBody")
             {
                 //Invalid target type
-                Debug.Log("CactEye 2: Wide Field Camera: Invalid Target Type.");
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Wide Field Camera: Invalid Target Type.");
+                }
                 return Type + ": Invalid Target Type.";
             }
             else if (Target == FlightGlobals.Bodies[0])
             {
                 //Cannot target the sun
-                Debug.Log("CactEye 2: Wide Field Camera: Cannot target the sun.");
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Wide Field Camera: Cannot target the sun.");
+                }
                 return Type + ": Cannot target the sun.";
             }
             else if (TargetPosition == new Vector3(-1, -1, 0))
             {
                 //target not in scope
-                Debug.Log("CactEye 2: Wide Field Camera: Target not in scope.");
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Wide Field Camera: Target not in scope.");
+                }
                 return Type + ": Target not in scope field of view.";
             }
 
@@ -54,15 +63,22 @@ namespace CactEye2
             else if (FOV > CactEyeAPI.bodySize[Target] * 50f)
             {
                 //Scope not zoomed in far enough
-                Debug.Log("CactEye 2: Wide Field Camera: Scope not zoomed in far enough.");
-                Debug.Log("CactEye 2: Wide Field Camera: " + FOV.ToString());
-                Debug.Log("CactEye 2: Wide Field Camera: " + (CactEyeAPI.bodySize[Target] * 50f).ToString());
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Wide Field Camera: Scope not zoomed in far enough.");
+                    Debug.Log("CactEye 2: Wide Field Camera: " + FOV.ToString());
+                    Debug.Log("CactEye 2: Wide Field Camera: " + (CactEyeAPI.bodySize[Target] * 50f).ToString());
+                }
                 return Type + ": Scope not zoomed in far enough.";
             }
 
             //Check to see if target is blocked.
             else if (CactEyeAPI.CheckOccult(Target) != "")
             {
+                if (CactEyeConfig.DebugMode)
+                {
+                    Debug.Log("CactEye 2: Target is occulted by another body.");
+                }
                 return Type + ": Target is occulted by another body.";
             }
 
@@ -81,7 +97,10 @@ namespace CactEye2
 
                     SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
 
-                    Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+                    if (CactEyeConfig.DebugMode)
+                    {
+                        Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+                    }
 
                     if (IsSmallOptics)
                     {
