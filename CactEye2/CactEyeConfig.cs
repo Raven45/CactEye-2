@@ -43,10 +43,7 @@ namespace CactEye2
     {
 
         //Path to the configuration file.
-        private string ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
-
-        //Boolean stating whether the file is loaded or not
-        public bool IsLoaded = false;
+        private static string ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
 
         //Specifies whether CactEye should operate in debug mode or not.
         public static bool DebugMode = false;
@@ -62,7 +59,7 @@ namespace CactEye2
             ReadSettings();
         }
 
-        public void ReadSettings()
+        public static void ReadSettings()
         {
             ConfigNode Settings = ConfigNode.Load(ConfigFilePath);
 
@@ -90,7 +87,7 @@ namespace CactEye2
                     Debug.Log("CactEye 2: Logical Error: Error loaded configuration file. Was not able to find CactEye2 node in configuration file.");
                 }
 
-                IsLoaded = true;
+                //IsLoaded = true;
             }
             else
             {
@@ -99,13 +96,19 @@ namespace CactEye2
 
         }
 
-        public void ApplySettings()
+        public static void ApplySettings()
         {
+
+            Debug.Log("CactEye 2: Settings saved to " + ConfigFilePath);
+
             ConfigNode Settings = new ConfigNode();
             ConfigNode CactEye2 = Settings.AddNode("CactEye2");
             CactEye2.AddValue("DebugMode", DebugMode);
+            Debug.Log("CactEye 2: DebugMode = " + DebugMode.ToString());
             CactEye2.AddValue("SunDamage", SunDamage);
+            Debug.Log("CactEye 2: SunDamage = " + SunDamage.ToString());
             CactEye2.AddValue("GyroDecay", GyroDecay);
+            Debug.Log("CactEye 2: GyroDecay = " + GyroDecay.ToString());
             Settings.Save(ConfigFilePath);
         }
     }

@@ -22,9 +22,17 @@ namespace CactEye2
         private static ApplicationLauncherButton appLauncherButton = null;
         private Texture2D Icon = null;
 
-        private bool SunDamage;
-        private bool GyroDecay;
+        private bool DebugMode = false;
+        private bool SunDamage = false;
+        private bool GyroDecay = false;
 
+        /* ************************************************************************************************
+         * Function Name: CactEyeConfigMenu
+         * Input: N/A
+         * Output: N/A
+         * Purpose: Default constructor for the configuration menu. This will set several different 
+         * initial values for the config menu GUI.
+         * ************************************************************************************************/
         public CactEyeConfigMenu()
         {
 
@@ -40,7 +48,13 @@ namespace CactEye2
             WindowPosition = new Rect(StartXPosition, StartYPosition, WindowWidth, WindowHeight);
         }
 
-
+        /* ************************************************************************************************
+         * Function Name: Awake
+         * Input: N/A
+         * Output: N/A
+         * Purpose: Awake is a function that Unity looks for when instantiating a MonoBehavior or derived
+         * class. Awake should fire at the start of a scene, typically directly after a scene change.
+         * ************************************************************************************************/
         public void Awake() 
         {
             if (ApplicationLauncher.Ready)
@@ -59,6 +73,15 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: OnDestroy
+         * Input: N/A
+         * Output: N/A
+         * Purpose: OnDestroy is a function that Unity look for when destroying a MonoBehavior or derived
+         * class. Think of it as a destructor; it's called on the destruction of an object, and in Unity
+         * allows the programmer to clean things up. In this case, OnDestroy will remove the application
+         * launcher button so we don't get duplicate buttons in the SpaceCenter.
+         * ************************************************************************************************/
         public void OnDestroy()
         {
             if (appLauncherButton != null)
@@ -73,6 +96,13 @@ namespace CactEye2
             }
         }
 
+        /* ************************************************************************************************
+         * Function Name: InitializeApplicationButton
+         * Input: N/A
+         * Output: A reference to the newly created button.
+         * Purpose: This function will initialize the application launcher button for CactEye, and specify
+         * which functions to call when a user clicks the button.
+         * ************************************************************************************************/
         ApplicationLauncherButton InitializeApplicationButton()
         {
             ApplicationLauncherButton Button = null;
@@ -105,6 +135,13 @@ namespace CactEye2
             return Button;
         }
 
+        /* ************************************************************************************************
+         * Function Name: OnAppLauncherTrue
+         * Input: N/A
+         * Output: N/A
+         * Purpose: This function is called when a user clicks the application launcher button and the 
+         * configuration menu is not being displayed. Essentially it brings up the configuration menu.
+         * ************************************************************************************************/
         void OnAppLauncherTrue()
         {
             Toggle();
@@ -116,6 +153,13 @@ namespace CactEye2
 
         }
 
+        /* ************************************************************************************************
+         * Function Name: OnAppLauncherFalse
+         * Input: N/A
+         * Output: N/A
+         * Purpose: This function is called when a user clicks the application launcher button and the 
+         * configuration menu is not being displayed. Essentially it hides the configuration menu.
+         * ************************************************************************************************/
         void OnAppLauncherFalse()
         {
             Toggle();
@@ -127,10 +171,23 @@ namespace CactEye2
         }
 
 
+        /* ************************************************************************************************
+         * Function Name: Toggle
+         * Input: N/A
+         * Output: N/A
+         * Purpose: This function will show or hide the configuration menu, depending on whether or not 
+         * the configuration menu is already up.
+         * ************************************************************************************************/
         public void Toggle()
         {
             if (!IsGUIVisible)
             {
+
+                CactEyeConfig.ReadSettings();
+                DebugMode = CactEyeConfig.DebugMode;
+                SunDamage = CactEyeConfig.SunDamage;
+                GyroDecay = CactEyeConfig.GyroDecay;
+
                 RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
 
                 if (CactEyeConfig.DebugMode)
@@ -138,8 +195,15 @@ namespace CactEye2
                     Debug.Log("CactEye 2: Debug: CactEyeConfigMenu enabled!");
                 }
             }
+
             else
             {
+
+                CactEyeConfig.DebugMode = DebugMode;
+                CactEyeConfig.SunDamage = SunDamage;
+                CactEyeConfig.GyroDecay = GyroDecay;
+                CactEyeConfig.ApplySettings();
+
                 RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
 
                 if (CactEyeConfig.DebugMode)
@@ -147,9 +211,17 @@ namespace CactEye2
                     Debug.Log("CactEye 2: Debug: CactEyeConfigMenu disabled!");
                 }
             }
+
             IsGUIVisible = !IsGUIVisible;
         }
 
+        /* ************************************************************************************************
+         * Function Name: MainGUI
+         * Input: N/A
+         * Output: N/A
+         * Purpose: This function will draw the configuration menu GUI, and define the individual controls
+         * on that GUI.
+         * ************************************************************************************************/
         private void MainGUI(int WindowID)
         {
 
@@ -167,7 +239,7 @@ namespace CactEye2
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-            CactEyeConfig.DebugMode = GUILayout.Toggle(CactEyeConfig.DebugMode, "Enable Debug Mode.");
+            DebugMode = GUILayout.Toggle(DebugMode, "Enable Debug Mode.");
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -175,7 +247,7 @@ namespace CactEye2
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            SunDamage = GUILayout.Toggle(GyroDecay, "Enable Gyroscope decay over time.");
+            GyroDecay = GUILayout.Toggle(GyroDecay, "Enable Gyroscope decay over time.");
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -184,8 +256,16 @@ namespace CactEye2
             GUI.DragWindow(new Rect(0, 0, WindowPosition.width, 16));
         }
 
+        /* ************************************************************************************************
+         * Function Name: DrawGUI
+         * Input: N/A
+         * Output: N/A
+         * Purpose: This function is called when the Toggle function is called. This will define the 
+         * configuration menu window and then call MainGUI.
+         * ************************************************************************************************/
         private void DrawGUI()
         {
+
             if (CactEyeConfig.DebugMode)
             {
                 Debug.Log("CactEye 2: Debug: Callback to DrawGUI occurred!");
