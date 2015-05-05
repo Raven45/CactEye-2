@@ -18,6 +18,8 @@ namespace CactEye2
         //Field of view of the camera
         public float FieldOfView;
 
+        public bool RotationLock = false;
+
         //Texture stuff...
         private RenderTexture ScopeRenderTexture;
         private RenderTexture FullResolutionTexture;
@@ -104,7 +106,10 @@ namespace CactEye2
                     }
                     Cam.transform.up = CameraTransform.up;
                     Cam.transform.forward = CameraTransform.forward;
-                    Cam.transform.rotation = CameraTransform.rotation;
+                    if (!RotationLock) 
+                    {
+                        Cam.transform.rotation = CameraTransform.rotation;
+                    }
                     Cam.fieldOfView = FieldOfView;
                     Cam.targetTexture = RT;
                 }

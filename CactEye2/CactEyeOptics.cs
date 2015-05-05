@@ -49,7 +49,7 @@ namespace CactEye2
                 //tie-in with Firespitter.
                 opticsAnimate = GetComponent<ModuleAnimateGeneric>();
             }
-            else
+            else if (IsSmallOptics && !SmallApertureOpen)
             {
                 Events["OpenSmallAperture"].active = true;
             }
@@ -73,10 +73,10 @@ namespace CactEye2
                 IsFunctional = true;
             }
 
-            Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
-            Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
-            Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
-            Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
+            //Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
+            //Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
+            //Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
+            //Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
         }
 
         /* ************************************************************************************************

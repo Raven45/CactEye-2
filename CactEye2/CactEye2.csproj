@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Kerbal Space Program 0.90\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,12 +54,14 @@
     <Compile Include="CactEyeAsteroidProcessor.cs" />
     <Compile Include="CactEyeAsteroidSpawner.cs" />
     <Compile Include="CactEyeCamera.cs" />
+    <Compile Include="CactEyeConfig.cs" />
     <Compile Include="CactEyeGyro.cs" />
     <Compile Include="CactEyeOccultation.cs" />
     <Compile Include="CactEyeOptics.cs" />
     <Compile Include="CactEyeProcessor.cs" />
     <Compile Include="CactEyeAPI.cs" />
     <Compile Include="CactEyeWideField.cs" />
+    <Compile Include="CactEyeConfigMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TelescopeMenu.cs" />
   </ItemGroup>
