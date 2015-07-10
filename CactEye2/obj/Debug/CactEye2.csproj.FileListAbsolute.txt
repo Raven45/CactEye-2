@@ -25,3 +25,8 @@ C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\bin\Debug\Assembly-CSharp-fir
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.csprojResolveAssemblyReference.cache
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.dll
 C:\Users\Aaron\Dropbox\CactEye2\CactEye-2\CactEye2\obj\Debug\CactEye2.pdb
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\CactEye2.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\CactEye2.pdb
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Projects\KSP\CactEye-2\CactEye2\obj\Debug\CactEye2.dll
+C:\Projects\KSP\CactEye-2\CactEye2\obj\Debug\CactEye2.pdb
