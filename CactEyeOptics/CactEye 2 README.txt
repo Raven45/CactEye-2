@@ -10,9 +10,14 @@ patch that makes CactEye 2 fully compatible with Distant Object 1.5.4. If you ar
 Distant Object, then the patch is not needed and will introduce unnecessary log spam. 
 
 To install the Compatibility patch for Distant Object Enhancement, extract the contents of the 
-"Compatibility Patch for Distant Object v1.5.4" folder to your GameData folder.
+"DistantObjectHook" folder to your GameData folder.
 
 ******************Change Log******************
+
+CactEye2 BETA 6.2
+- Recompiled for the latest version of DOE
+- The GRU-1000 now has a lifespan of 100 days.
+- The GRU-2000 now has a lifespan of 200 days.
 
 CactEye 2 BETA 6.1
 NOTE: Angel-125 here, raven appears to have been away for a couple of months, so I've forked his build of CactEye and am doing some caretaking/maintennance until raven gets back. I'm hoping he/she will return to a bunch of pull requests from me and pick up the mod again. If not, I'll do what I can to continue the er, continuation of RubberDucky's mod.
