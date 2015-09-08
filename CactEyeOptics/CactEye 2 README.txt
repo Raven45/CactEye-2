@@ -14,7 +14,7 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
-CactEye2 BETA 6.2
+CactEye2 BETA 6.7
 - Recompiled for the latest version of DOE
 - The GRU-1000 now has a lifespan of 100 days.
 - The GRU-2000 now has a lifespan of 200 days.

@@ -39,9 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CactEye2\bin\Release\CactEye2.dll</HintPath>
     </Reference>
-    <Reference Include="DistantObject, Version=1.5.1.33811, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DistantObject, Version=1.5.7.22632, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\DistantObject.dll</HintPath>
+      <HintPath>..\..\..\..\KSPDev\GameData\DistantObject\DistantObject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
