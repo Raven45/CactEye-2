@@ -14,6 +14,10 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
+CactEye Telescopes Continued 0.6.10
+- Recompiled for the latest version of DOE
+- Updated for KSP 1.0.5
+
 CactEye Telescopes Continued 0.6.9
 - Recompiled for the latest version of DOE
 
