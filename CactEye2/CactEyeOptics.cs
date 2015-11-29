@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using UnityEngine;
 
 namespace CactEye2
@@ -33,7 +34,6 @@ namespace CactEye2
         //private bool Error = false;
 
         private TelescopeMenu TelescopeControlMenu;
-
 
         /*
          * Function name: OnStart

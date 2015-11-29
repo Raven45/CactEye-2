@@ -16,6 +16,12 @@ C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\DistantObjectHook.pdb
 C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\CactEye2.dll
 C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\DistantObject.dll
 C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\CactEye2.pdb
-C:\Projects\KSP\CactEye-2\DistantObjectHook\obj\Debug\DistantObjectHook.csprojResolveAssemblyReference.cache
 C:\Projects\KSP\CactEye-2\DistantObjectHook\obj\Debug\DistantObjectHook.dll
 C:\Projects\KSP\CactEye-2\DistantObjectHook\obj\Debug\DistantObjectHook.pdb
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\Assembly-CSharp.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\UnityEngine.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\TDx.TDxInput.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\TrackIRUnity.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\Mono.Cecil.dll
+C:\Projects\KSP\CactEye-2\DistantObjectHook\bin\Debug\Mono.Security.dll

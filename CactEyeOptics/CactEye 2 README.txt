@@ -14,6 +14,11 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 
 ******************Change Log******************
 
+0.6.11
+- Recompiled for the latest version of DOE
+- Fixed an issue preventing the science reports from working in Career/Science Sandbox mode.
+- The slim probe core now has the proper level of SAS control to facilitate targeting astronomical bodies.
+
 CactEye Telescopes Continued 0.6.10
 - Recompiled for the latest version of DOE
 - Updated for KSP 1.0.5

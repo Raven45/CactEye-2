@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using CactEye2;
+using System.Reflection;
 
 namespace DistantObjectHook
 {
@@ -13,6 +14,9 @@ namespace DistantObjectHook
     {
 
         private List<CactEyeOptics> Optics = new List<CactEyeOptics>();
+//        AssemblyLoader.LoadedAssembly distantObject;
+//        MethodInfo SetExternalFOVControl;
+//        MethodInfo SetFOV;
 
         private void Start()
         {
@@ -37,11 +41,36 @@ namespace DistantObjectHook
                     }
                 }
             }
+
+//            findDistantObjectMethods();
         }
 
+/*
+        protected void findDistantObjectMethods()
+        {
+            //Find the methods we need.
+            foreach (AssemblyLoader.LoadedAssembly assembly in AssemblyLoader.loadedAssemblies)
+            {
+                if (assembly.name == "DistantObject")
+                {
+                    distantObject = assembly;
+
+                    Type[] classes = assembly.assembly.GetTypes();
+                    foreach (Type flareDraw in classes)
+                    {
+                        if (flareDraw.Name == "FlareDraw")
+                        {
+                            SetExternalFOVControl = flareDraw.GetMethod("SetExternalFOVControl");
+                            SetFOV = flareDraw.GetMethod("SetFOV");
+                        }
+                    }
+                }
+            }
+
+        }
+*/
         private void Update()
         {
-
             bool ExternalControl = false;
             CactEyeOptics ActiveOptics = null;
 
@@ -54,6 +83,16 @@ namespace DistantObjectHook
                     ActiveOptics = optics;
                 }
             }
+
+            /*
+            if (SetExternalFOVControl != null && SetFOV != null)
+            {
+                SetExternalFOVControl.Invoke(distantObject, new object[] { ExternalControl });
+
+                if (ExternalControl)
+                    SetFOV.Invoke(distantObject, new object[] { ActiveOptics.GetFOV() });
+            }
+             */ 
 
             DistantObject.FlareDraw.SetExternalFOVControl(ExternalControl);
 
