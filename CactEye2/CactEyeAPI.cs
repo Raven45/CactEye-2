@@ -23,7 +23,7 @@ namespace CactEye2
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     class CactEyeAPI: MonoBehaviour
     {
-
+        
         public static Dictionary<CelestialBody, double> bodyDist = new Dictionary<CelestialBody, double>();
         public static Dictionary<CelestialBody, double> bodySize = new Dictionary<CelestialBody, double>();
         public static Dictionary<CelestialBody, Vector3d> bodyAngle = new Dictionary<CelestialBody, Vector3d>();
