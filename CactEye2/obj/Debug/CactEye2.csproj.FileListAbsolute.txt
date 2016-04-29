@@ -37,3 +37,10 @@ C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\TDx.TDxInput.dll
 C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\TrackIRUnity.dll
 C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\Mono.Cecil.dll
 C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\Mono.Security.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\KSPAssets.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\KSPCore.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\KSPUtil.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\UnityEngine.UI.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\Vectrosity.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\SaveUpgradePipeline.Core.dll
+C:\Projects\KSP\CactEye-2\CactEye2\bin\Debug\UnityEngine.xml

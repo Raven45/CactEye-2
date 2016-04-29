@@ -246,6 +246,12 @@ namespace CactEye2
             }
         }
 
+        public void OnGUI()
+        {
+            if (TelescopeControlMenu.IsGUIVisible)
+                TelescopeControlMenu.DrawGUI();
+        }
+
         /* ************************************************************************************************
          * Function Name: FixScope
          * Input: None

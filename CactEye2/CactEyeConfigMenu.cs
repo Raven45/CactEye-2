@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.UI.Screens;
 
 namespace CactEye2
 {
@@ -188,8 +189,6 @@ namespace CactEye2
                 SunDamage = CactEyeConfig.SunDamage;
                 GyroDecay = CactEyeConfig.GyroDecay;
 
-                RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
-
                 if (CactEyeConfig.DebugMode)
                 {
                     Debug.Log("CactEye 2: Debug: CactEyeConfigMenu enabled!");
@@ -203,8 +202,6 @@ namespace CactEye2
                 CactEyeConfig.SunDamage = SunDamage;
                 CactEyeConfig.GyroDecay = GyroDecay;
                 CactEyeConfig.ApplySettings();
-
-                RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
 
                 if (CactEyeConfig.DebugMode)
                 {
@@ -254,6 +251,12 @@ namespace CactEye2
 
             //Make the window draggable by the top bar only.
             GUI.DragWindow(new Rect(0, 0, WindowPosition.width, 16));
+        }
+
+        public void OnGUI()
+        {
+            if (IsGUIVisible)
+                DrawGUI();
         }
 
         /* ************************************************************************************************

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.UI.Dialogs;
 
 namespace CactEye2
 {
@@ -17,7 +18,7 @@ namespace CactEye2
         private string WindowTitle;
 
         //Flag that detects if the GUI is enabled or not.
-        private bool IsGUIVisible = false;
+        public bool IsGUIVisible = false;
 
         //Gui is 80% of screen resolution.
         private float ScreenToGUIRatio = 0.8f;
@@ -55,10 +56,6 @@ namespace CactEye2
         private string Notification = "";
         static private double timer = 6f;
         private double storedTime = 0f;
-
-        //Check for pause menu
-        //private bool GameIsPaused = false;
-
 
         public TelescopeMenu(Transform Position)
         {
@@ -122,8 +119,6 @@ namespace CactEye2
                     Debug.Log("CactEye 2: Exception 3: Was not able to get a list of Reaction Wheels or Processors.");
                     Debug.Log(E.ToString());
                 }
-
-                RenderingManager.AddToPostDrawQueue(3, new Callback(DrawGUI));
             }
  
             else
@@ -136,8 +131,6 @@ namespace CactEye2
                     }
                     ActiveProcessor = null;
                 }
-
-                RenderingManager.RemoveFromPostDrawQueue(3, new Callback(DrawGUI));
             }
             IsGUIVisible = !IsGUIVisible;
         }
@@ -243,7 +236,7 @@ namespace CactEye2
             GUI.DragWindow(new Rect(0, 0, WindowPosition.width, 16));
         }
 
-        private void DrawGUI()
+        public void DrawGUI()
         {
 
             try

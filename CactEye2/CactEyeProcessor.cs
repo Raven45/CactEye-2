@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.UI.Dialogs;
+using KSP.UI.Screens;
+using KSP.UI.Screens.Flight.Dialogs;
 
 namespace CactEye2
 {
@@ -361,7 +364,7 @@ namespace CactEye2
                 false,                                  //bool for show transmit warning
                 "",                                     //string for transmit warning
                 false,                                  //show the reset button
-                false,                                  //show the lab option
+                new ScienceLabSearch(this.part.vessel, Data),//show the lab option
                 new Callback<ScienceData>(_onPageDiscard), 
                 new Callback<ScienceData>(_onPageKeep), 
                 new Callback<ScienceData>(_onPageTransmit), 
@@ -372,22 +375,21 @@ namespace CactEye2
             ExperimentsResultDialog ScienceDialog = ExperimentsResultDialog.DisplayResult(page);
 
             //Store the old dialog gui information
-            ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFill2").First();
-            GUIStyle style = ScienceDialog.guiSkin.box;
-            StyleDefault = style.normal;
-            SkinStored = ScienceDialog.guiSkin;
+//            ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFill2").First();
+//            GUIStyle style = ScienceDialog.guiSkin.box;
+//            StyleDefault = style.normal;
+//            SkinStored = ScienceDialog.guiSkin;
 
             ////Lets put a pretty picture on the science dialog.
-            ScienceStyle = ScienceDialog.guiSkin.box;
+//            ScienceStyle = ScienceDialog.guiSkin.box;
             ScienceStyle.normal.background = Screenshot;
 
-            ScienceDialog.guiSkin.window.fixedWidth = 587f;
+//            ScienceDialog.guiSkin.window.fixedWidth = 587f;
             ScienceStyle.fixedWidth = 512f;
             ScienceStyle.fixedHeight = 288f;
 
             
         }
-
 
         private void ResetExperimentGUI()
         {
