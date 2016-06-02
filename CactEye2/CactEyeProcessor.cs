@@ -33,10 +33,10 @@ namespace CactEye2
 
         private Vector3d OriginalSunDirection;
 
-        private GUIStyle ScienceStyle;
-        private GUIStyle ProgressStyle;
-        private GUISkin SkinStored;
-        private GUIStyleState StyleDefault;
+        private GUIStyle ScienceStyle = new GUIStyle();
+        private GUIStyle ProgressStyle = new GUIStyle();
+        private GUISkin SkinStored = new GUISkin();
+        private GUIStyleState StyleDefault = new GUIStyleState();
 
         /* ************************************************************************************************
          * Function Name: GetProessorType
