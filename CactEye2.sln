@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CactEye2", "CactEye2\CactEye2.csproj", "{A72D76B0-E168-42FB-9B3B-7B58476978BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistantObjectHook", "DistantObjectHook\DistantObjectHook.csproj", "{1C9DE1D7-B902-4E01-803A-16556E8A8D9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A72D76B0-E168-42FB-9B3B-7B58476978BC} = {A72D76B0-E168-42FB-9B3B-7B58476978BC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
