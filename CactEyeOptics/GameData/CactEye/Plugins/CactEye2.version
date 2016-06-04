@@ -1,23 +1,23 @@
 {
     "NAME":"CactEye 2",
-    "URL":"https://raw.githubusercontent.com/Angel-125/CactEye2/master/GameData/CactEye/Plugins/CactEye2.version",
-    "DOWNLOAD":"https://github.com/Angel-125/CactEye2/releases",
+    "URL":"https://raw.githubusercontent.com/icedown/CactEye2/master/GameData/CactEye/Plugins/CactEye2.version",
+    "DOWNLOAD":"https://github.com/icedown/CactEye2/releases",
     "GITHUB":
     {
-        "USERNAME":"Angel-125",
+        "USERNAME":"icedown",
         "REPOSITORY":"CactEye2",
         "ALLOW_PRE_RELEASE":false,
     },
     "VERSION":
     {
-	"MAJOR":7,
-	"MINOR":1,
+	"MAJOR":1,
+	"MINOR":0,
 	"PATCH":0
     },
     "KSP_VERSION":
     {
         "MAJOR":1,
         "MINOR":1,
-        "PATCH":1
+        "PATCH":2
     },
 }
