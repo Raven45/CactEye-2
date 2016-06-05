@@ -26,6 +26,10 @@ namespace CactEye2
         private bool DebugMode = false;
         private bool SunDamage = false;
         private bool GyroDecay = false;
+        private bool AsteroidSpawner = false;
+
+        //Set once application launcher button has been installed
+        private bool AppLauncher = false;
 
         /* ************************************************************************************************
          * Function Name: CactEyeConfigMenu
@@ -45,7 +49,7 @@ namespace CactEye2
             float StartXPosition = Screen.width * 0.1f;
             float StartYPosition = Screen.height * 0.1f;
             float WindowWidth = 200;
-            float WindowHeight = 100;
+            float WindowHeight = 125;
             WindowPosition = new Rect(StartXPosition, StartYPosition, WindowWidth, WindowHeight);
         }
 
@@ -58,7 +62,7 @@ namespace CactEye2
          * ************************************************************************************************/
         public void Awake() 
         {
-            if (ApplicationLauncher.Ready)
+/*            if (ApplicationLauncher.Ready)
             {
                 appLauncherButton = InitializeApplicationButton();
 
@@ -71,6 +75,17 @@ namespace CactEye2
                         Debug.Log("CactEye 2: Debug: Application Launcher Button created!");
                     }
                 }
+            }
+ */
+            GameEvents.onGUIApplicationLauncherReady.Add(OnGuiApplicationLauncherReady);
+        }
+
+        private void OnGuiApplicationLauncherReady()
+        {
+            if (!AppLauncher)
+            {
+                appLauncherButton = InitializeApplicationButton();
+                AppLauncher = true;
             }
         }
 
@@ -188,7 +203,7 @@ namespace CactEye2
                 DebugMode = CactEyeConfig.DebugMode;
                 SunDamage = CactEyeConfig.SunDamage;
                 GyroDecay = CactEyeConfig.GyroDecay;
-
+                AsteroidSpawner = CactEyeConfig.AsteroidSpawner;
                 if (CactEyeConfig.DebugMode)
                 {
                     Debug.Log("CactEye 2: Debug: CactEyeConfigMenu enabled!");
@@ -201,6 +216,7 @@ namespace CactEye2
                 CactEyeConfig.DebugMode = DebugMode;
                 CactEyeConfig.SunDamage = SunDamage;
                 CactEyeConfig.GyroDecay = GyroDecay;
+                CactEyeConfig.AsteroidSpawner = AsteroidSpawner;
                 CactEyeConfig.ApplySettings();
 
                 if (CactEyeConfig.DebugMode)
@@ -245,6 +261,10 @@ namespace CactEye2
 
             GUILayout.BeginHorizontal();
             GyroDecay = GUILayout.Toggle(GyroDecay, "Enable Gyroscope decay over time.");
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            AsteroidSpawner = GUILayout.Toggle(AsteroidSpawner, "Enable Asteroid spawning.");
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
