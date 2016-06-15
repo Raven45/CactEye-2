@@ -23,6 +23,7 @@ namespace CactEye2
         public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
         {
             CelestialBody Target = FlightGlobals.Bodies.Find(n => n.GetName() == FlightGlobals.fetch.VesselTarget.GetName());
+            CelestialBody Home = this.vessel.mainBody;
 
             //Sandbox or Career mode logic handled by gui.
             //if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
@@ -90,16 +91,17 @@ namespace CactEye2
                 ScienceExperiment WideFieldExperiment;
                 ScienceSubject WideFieldSubject;
 
+                ExperimentID = "CactEyePlanetary" + TargetName;
                 try
                 {
                     WideFieldExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
-                    WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Target, "");
-
+                    WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Home, "");
                     SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
-
+                   
                     if (CactEyeConfig.DebugMode)
                     {
                         Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
+
                     }
 
                     if (IsSmallOptics)
