@@ -1,14 +1,14 @@
 {
-    "spec_version": "v1.4",
-    "$kref": "#/ckan/kerbalstuff/720",
+    "spec_version": "1.1.3.4",
+    "$kref": "#/ckan/spacedock/629",
     "license": "CC-BY-4.0",
     "resources": {
-        "homepage": "http://forum.kerbalspaceprogram.com/threads/136040-1-0-4-BETA-CactEye-Telescopes-Continued-0-6-8?p=2231950#post2231950"
+        "homepage": "http://forum.kerbalspaceprogram.com/index.php?/topic/141298-112-cacteye-optics-community-takeover-updated-06052016/"
     },
     "identifier": "CactEyeTelescopes",
 	"comment"	: "identifier set to CactEyeTelescopes rather than CactEye in case the original mod ever returns",
 	"install"	:	[ { "find"	:	"CactEye2",
 						"install_to" : "GameData",
 						"filter" : "MiniAVC.dll" } ],
-	"comment"	:	"No DistantObject support added since the foldername is hardcoded to a certain DistObj version and would soon break"
+	"comment"	:	"CactEye telescopes feature a fully-functional science system, and are upgradeable/serviceable (primarily through Kerbal Inventory System). Orbital telescopes also now become fundamental to discovering asteroids."
 }
