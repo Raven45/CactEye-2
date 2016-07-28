@@ -121,7 +121,7 @@ namespace CactEye2
                 {
                     //Check if we're pointing at the sun
                     Vector3d Heading = (FlightGlobals.Bodies[0].position - FlightGlobals.ship_position).normalized;
-                    if (Vector3d.Dot(transform.up, Heading) > 0.9)
+                    if (Vector3d.Dot(transform.up, Heading) > 0.9 && CactEyeConfig.SunDamage)
                     {
                         ScreenMessages.PostScreenMessage("Telescope pointed directly at sun, optics damaged and processors fried!", 6, ScreenMessageStyle.UPPER_CENTER);
                         BreakScope();
