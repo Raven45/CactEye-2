@@ -20,7 +20,7 @@ namespace CactEye2
          * if the target is not the sun, if the target is visible in the scope, and if the telescope
          * is zoomed in far enough.
          * ************************************************************************************************/
-        public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        public override string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
             CelestialBody Target = FlightGlobals.Bodies.Find(n => n.GetName() == FlightGlobals.fetch.VesselTarget.GetName());
             CelestialBody Home = this.vessel.mainBody;
@@ -104,10 +104,8 @@ namespace CactEye2
 
                     }
 
-                    if (IsSmallOptics)
-                    {
-                        SciencePoints *= 0.1f;
-                    }
+                    //Different scopes have different multipliers for the science gains.
+                    SciencePoints *= scienceMultiplier;
 
                     ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, WideFieldSubject.id, Type + " " + TargetName + " Observation");
                     StoredData.Add(Data);
