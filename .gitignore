@@ -43,6 +43,6 @@ Temporary Items
 .apdisk
 
 # Build Directories
-**/bin
-**/obj
+**/bin/**
+**/obj/**
 
