@@ -163,9 +163,19 @@ namespace CactEye2
         public void ActivateProcessor()
         {
             Active = true;
+            bool rbInit = false;
+            if (CactEyeOptics.IsModInstalled("ResearchBodies"))
+            {
+                if(!RBWrapper.APIRBReady)
+                {
+                    rbInit = RBWrapper.InitRBWrapper();
+                }
+            }
+            
             //CorrectLightDirection();
             if (CactEyeConfig.DebugMode)
             {
+                Debug.Log("CactEye 2: Debug: RB init returned " + rbInit.ToString());
                 Debug.Log("CactEye 2: Processor activated! " + Active.ToString());
             }
         }
