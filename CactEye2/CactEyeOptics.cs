@@ -37,9 +37,6 @@ namespace CactEye2
         [KSPField(isPersistant = true)]
         public bool isRBEnabled;
 
-        public RBWrapper ResearchBodies;
-
-
         private ModuleAnimateGeneric opticsAnimate;
 
         //Control Variable that disables functionality if there is an error.
@@ -86,7 +83,6 @@ namespace CactEye2
                 IsFunctional = true;
             }
             
-            isRBInstalled = IsModInstalled("ResearchBodies");
             
             if (CactEyeConfig.DebugMode)
             {
@@ -97,13 +93,6 @@ namespace CactEye2
                 Debug.Log("CactEye 2: Debug: RBInstalled is " + isRBInstalled.ToString());
             }
 
-            if(isRBInstalled)
-            {
-                if (!RBWrapper.InitRBWrapper())
-                {
-                    Debug.Log("Cacteye 2: Debug: RB initilization call failed");
-                }
-            }
             
         }
         /* ************************************************************************************************
@@ -112,7 +101,7 @@ namespace CactEye2
          * Output: True if mod is found
          * Purpose: This function will be called at start to determine if a particular mod is installed
          * ************************************************************************************************/
-        internal static bool IsModInstalled(string assemblyName)
+        public static bool IsModInstalled(string assemblyName)
         {
             return AssemblyLoader.loadedAssemblies.Any(a => a.name == assemblyName);
 
