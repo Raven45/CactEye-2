@@ -91,13 +91,16 @@ namespace CactEye2
                 ScienceExperiment WideFieldExperiment;
                 ScienceSubject WideFieldSubject;
 
+                bool withParent;
+                CelestialBody parentBody;
+                
+
                 ExperimentID = "CactEyePlanetary" + TargetName;
                 try
                 {
                     WideFieldExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
                     WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Home, "");
-                    SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
-                   
+                    SciencePoints = WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience * scienceMultiplier;
                     if (CactEyeConfig.DebugMode)
                     {
                         Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
@@ -105,11 +108,28 @@ namespace CactEye2
                     }
 
                     //Different scopes have different multipliers for the science gains.
-                    SciencePoints *= scienceMultiplier;
+//                    SciencePoints *= scienceMultiplier;
 
                     ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, WideFieldSubject.id, Type + " " + TargetName + " Observation");
                     StoredData.Add(Data);
                     ReviewData(Data, Screenshot);
+                    if (RBWrapper.APIRBReady)
+                    {
+                        Debug.Log("CactEye 2: Wrapper ready");
+                        int RBFoundScience = (int)(8f * WideFieldExperiment.dataScale);
+
+                        bool newBody = RBWrapper.RBactualAPI.FoundBody(RBFoundScience, Target, out withParent, out parentBody);
+                        Debug.Log("CactEye 2: RB FoundBody returned " + newBody.ToString());
+                        if (!newBody)
+                        {
+                            RBWrapper.RBactualAPI.Research(Target, 5);
+                        }
+
+                    }
+                    else
+                    { 
+                        Debug.Log("CactEye 2: Wrapper not ready");
+                    }
                 }
 
                 catch (Exception e)

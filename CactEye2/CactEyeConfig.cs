@@ -46,7 +46,7 @@ namespace CactEye2
         private static string ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
 
         //Specifies whether CactEye should operate in debug mode or not.
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         //Specifies whether telescopes should blow up when pointed at the sun.
         public static bool SunDamage = true;

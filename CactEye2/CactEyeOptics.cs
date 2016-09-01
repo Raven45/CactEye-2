@@ -11,7 +11,7 @@ namespace CactEye2
     public class CactEyeOptics: PartModule
     {
         [KSPField(isPersistant = false)]
-        public bool DebugMode = false;
+        public bool DebugMode = true;
 
         [KSPField(isPersistant = false)]
         public bool IsSmallOptics = false;
@@ -30,6 +30,15 @@ namespace CactEye2
 
         [KSPField(isPersistant = true)]
         public bool SmallApertureOpen = false;
+
+        [KSPField(isPersistant = true)]
+        public bool isRBInstalled;
+
+        [KSPField(isPersistant = true)]
+        public bool isRBEnabled;
+
+        public RBWrapper ResearchBodies;
+
 
         private ModuleAnimateGeneric opticsAnimate;
 
@@ -76,14 +85,37 @@ namespace CactEye2
             {
                 IsFunctional = true;
             }
-
+            
+            isRBInstalled = IsModInstalled("ResearchBodies");
+            
             if (CactEyeConfig.DebugMode)
             {
                 Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
                 Debug.Log("CactEye 2: Debug: IsSmallOptics is " + IsSmallOptics.ToString());
                 Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
                 Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
+                Debug.Log("CactEye 2: Debug: RBInstalled is " + isRBInstalled.ToString());
             }
+
+            if(isRBInstalled)
+            {
+                if (!RBWrapper.InitRBWrapper())
+                {
+                    Debug.Log("Cacteye 2: Debug: RB initilization call failed");
+                }
+            }
+            
+        }
+        /* ************************************************************************************************
+         * Function Name: IsModInstalled
+         * Input: Mod Name
+         * Output: True if mod is found
+         * Purpose: This function will be called at start to determine if a particular mod is installed
+         * ************************************************************************************************/
+        internal static bool IsModInstalled(string assemblyName)
+        {
+            return AssemblyLoader.loadedAssemblies.Any(a => a.name == assemblyName);
+
         }
 
         /* ************************************************************************************************
