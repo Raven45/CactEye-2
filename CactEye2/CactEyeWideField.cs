@@ -116,21 +116,14 @@ namespace CactEye2
                     if (RBWrapper.APIRBReady)
                     {
                         Debug.Log("CactEye 2: Wrapper ready");
-                        
-                        RBWrapper.CelestialBodyInfo cbi;
+                        int RBFoundScience = (int)(8f * WideFieldExperiment.dataScale);
 
-                        RBWrapper.RBactualAPI.CelestialBodies.TryGetValue(Target, out cbi);
-                        if(!cbi.isResearched) 
+                        bool newBody = RBWrapper.RBactualAPI.FoundBody(RBFoundScience, Target, out withParent, out parentBody);
+                        Debug.Log("CactEye 2: RB FoundBody returned " + newBody.ToString());
+                        if (!newBody)
                         {
-                            int RBFoundScience = (int)(8f * WideFieldExperiment.dataScale);
-                            RBWrapper.RBactualAPI.FoundBody(RBFoundScience, Target, out withParent, out parentBody);
+                            RBWrapper.RBactualAPI.Research(Target, 5);
                         }
-                        else 
-                        {
-                            System.Random rnd = new System.Random();
-                            RBWrapper.RBactualAPI.Research(Target, rnd.Next(1,11));
-                        }
-                        
 
                     }
                     else
