@@ -22,6 +22,9 @@ namespace CactEye2
         [KSPField(isPersistant = false)]
         public bool IsFunctional = false;
 
+        [KSPField(isPersistant = false)]
+        public float scienceMultiplier;
+
         [KSPField(isPersistant = true)]
         public bool IsDamaged = false;
 
@@ -59,6 +62,7 @@ namespace CactEye2
             try
             {
                 TelescopeControlMenu = new TelescopeMenu(temp);
+                TelescopeControlMenu.scienceMultiplier = this.scienceMultiplier;
             }
             catch (Exception E)
             {
@@ -136,7 +140,8 @@ namespace CactEye2
             }
 
             //Send updated position information to the telescope gui object.
-            TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
+            if (TelescopeControlMenu != null)
+                TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
         }
 
         /* ************************************************************************************************

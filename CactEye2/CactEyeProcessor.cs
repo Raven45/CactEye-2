@@ -126,7 +126,7 @@ namespace CactEye2
          * function's behavoir will change based on what processor is the active processor on the telescope.
          * Please see the individual definitions in sub classes for further details.
          * ************************************************************************************************/
-        public abstract string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot);
+        public abstract string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot);
 
         /* ************************************************************************************************
          * Function Name: OnUpdate

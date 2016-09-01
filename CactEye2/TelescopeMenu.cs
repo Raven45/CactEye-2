@@ -9,7 +9,8 @@ namespace CactEye2
 {
     class TelescopeMenu: MonoBehaviour
     {
-        
+        public float scienceMultiplier;
+
         //Position and size of the window
         private Rect WindowPosition;
 
@@ -372,7 +373,7 @@ namespace CactEye2
                     //ActiveProcessor.GenerateScienceReport(TakeScreenshot(ActiveProcessor.GetType()));
                     try
                     {
-                        Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), false, CameraModule.FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
+                        Notification = ActiveProcessor.DoScience(GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, 500f), scienceMultiplier, CameraModule.FieldOfView, CameraModule.TakeScreenshot(ActiveProcessor));
                     }
                     catch (Exception e)
                     {
