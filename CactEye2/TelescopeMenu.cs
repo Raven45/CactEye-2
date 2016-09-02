@@ -312,11 +312,12 @@ namespace CactEye2
             if (FlightGlobals.fetch.VesselTarget != null)
             {
                 string targetName = FlightGlobals.fetch.VesselTarget.GetName();
-                Vector2 vec = GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().position, ScopeRect.width);
+                Vector2 vec = GetTargetPos(FlightGlobals.fetch.VesselTarget.GetTransform().transform.position, ScopeRect.width);
 
                 if (vec.x > 16 && vec.y > 16 && vec.x < ScopeRect.width - 16 && vec.y < ScopeRect.height - 16)
                 {
-                    GUI.DrawTexture(new Rect(vec.x + ScopeRect.xMin - 16, vec.y + ScopeRect.yMin - 16, 32, 32), TargetPointerTexture);
+//                    GUI.DrawTexture(new Rect(vec.x + ScopeRect.xMin - 16, vec.y + ScopeRect.yMin - 16, 32, 32), TargetPointerTexture);
+                    GUI.DrawTexture(new Rect(vec.x + ScopeRect.xMin - 16, vec.y + ScopeRect.yMin - 32, 32, 32), TargetPointerTexture);
                     Vector2 size = GUI.skin.GetStyle("Label").CalcSize(new GUIContent(targetName));
                     if (vec.x > 0.5 * size.x && vec.x < ScopeRect.width - (0.5 * size.x) && vec.y < ScopeRect.height - 16 - size.y)
                     {
