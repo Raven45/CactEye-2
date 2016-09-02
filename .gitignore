@@ -43,14 +43,7 @@ Temporary Items
 .apdisk
 
 # Build Directories
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+CactEye2/bin/
+CactEye2/obj/*
+DistantObjectHook/bin/
+DistantObjectHook/obj/
