@@ -43,9 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\CactEye2\bin\Release\CactEye2.dll</HintPath>
     </Reference>
-    <Reference Include="DistantObject, Version=1.5.7.22632, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\KSPDev\GameData\DistantObject\DistantObject.dll</HintPath>
+    <Reference Include="DistantObject">
+      <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\GameData\DistantObject\DistantObject.dll</HintPath>
     </Reference>
     <Reference Include="KSPAssets">
       <HintPath>..\..\..\..\..\..\Development\Kerbal Space Program\KSP_x64_Data\Managed\KSPAssets.dll</HintPath>
