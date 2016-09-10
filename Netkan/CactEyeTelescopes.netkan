@@ -8,8 +8,7 @@
     "identifier": "CactEyeTelescopes",
 	"comment"	: "identifier set to CactEyeTelescopes rather than CactEye in case the original mod ever returns",
 	"install"	:	[ { "file"	:	"CactEyeOptics/GameData/CactEye",
-						"install_to" : "GameData",
-						"filter" : "MiniAVC.dll" } ],
+						"install_to" : "GameData" } ],
 	"comment"	:	"CactEye telescopes feature a fully-functional science system, and are upgradeable/serviceable (primarily through Kerbal Inventory System). Orbital telescopes also now become fundamental to discovering asteroids."
 	"ksp_version_min" "1.1.3",
 	"ksp_version_max" "1.1.3",
