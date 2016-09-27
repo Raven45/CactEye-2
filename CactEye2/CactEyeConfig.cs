@@ -43,7 +43,7 @@ namespace CactEye2
     {
 
         //Path to the configuration file.
-        private static string ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
+        private static string ConfigFilePath = null;
 
         //Specifies whether CactEye should operate in debug mode or not.
         public static bool DebugMode = true;
@@ -59,6 +59,7 @@ namespace CactEye2
 
         public void Start()
         {
+            ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
             ReadSettings();
         }
 
