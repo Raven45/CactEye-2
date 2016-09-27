@@ -369,8 +369,8 @@ namespace CactEye2
                 (
                 FlightGlobals.ActiveVessel.rootPart,    //hosting part
                 Data,                                   //Science data
-                Data.transmitValue,                     //scalar for transmitting the data
-                Data.labBoost,                          //scalar for lab bonuses
+                Data.baseTransmitValue,                     //scalar for transmitting the data
+                Data.labValue,                         //scalar for lab bonuses
                 false,                                  //bool for show transmit warning
                 "",                                     //string for transmit warning
                 false,                                  //show the reset button
