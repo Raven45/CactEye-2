@@ -33,20 +33,28 @@ namespace CactEye2
 
         private Vector3d OriginalSunDirection;
 
-        private GUIStyle ScienceStyle = new GUIStyle();
-        private GUIStyle ProgressStyle = new GUIStyle();
-        private GUISkin SkinStored = new GUISkin();
-        private GUIStyleState StyleDefault = new GUIStyleState();
+        private GUIStyle ScienceStyle = null;
+        private GUIStyle ProgressStyle = null;
+        private GUISkin SkinStored = null;
+        private GUIStyleState StyleDefault = null;
 
-        /* ************************************************************************************************
-         * Function Name: GetProessorType
-         * Input: None
-         * Output: The internal variable "Type"
-         * Purpose: This function will return the type of processor that another class is working with.
-         * The variable "Type" is a variable that can be modified through the part config files, and 
-         * specifies what type of processor the part is. This type will determine how the class behaves.
-         * ************************************************************************************************/
-        public string GetProcessorType()
+        public void Start()
+        {
+            ScienceStyle = new GUIStyle();
+            ProgressStyle = new GUIStyle();
+            SkinStored = new GUISkin();
+            StyleDefault = new GUIStyleState();
+        }
+
+    /* ************************************************************************************************
+     * Function Name: GetProessorType
+     * Input: None
+     * Output: The internal variable "Type"
+     * Purpose: This function will return the type of processor that another class is working with.
+     * The variable "Type" is a variable that can be modified through the part config files, and 
+     * specifies what type of processor the part is. This type will determine how the class behaves.
+     * ************************************************************************************************/
+    public string GetProcessorType()
         {
             return Type;
         }

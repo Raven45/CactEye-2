@@ -72,6 +72,13 @@ namespace CactEye2
             {
                 TelescopeControlMenu = new TelescopeMenu(temp);
                 TelescopeControlMenu.scienceMultiplier = this.scienceMultiplier;
+                TelescopeControlMenu.SetSmallOptics(IsSmallOptics);
+                TelescopeControlMenu.SetScopeOpen(IsFunctional);
+                if(!IsSmallOptics)
+                {
+                    TelescopeControlMenu.SetAperature(opticsAnimate);
+                }
+
             }
             catch (Exception E)
             {
@@ -163,7 +170,10 @@ namespace CactEye2
 
             //Send updated position information to the telescope gui object.
             if (TelescopeControlMenu != null)
+            {
                 TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
+            }
+
         }
 
         /* ************************************************************************************************

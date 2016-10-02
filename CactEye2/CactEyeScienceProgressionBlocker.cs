@@ -71,7 +71,7 @@ namespace CactEye2
         private void OnScienceReceived(float amount, ScienceSubject subject, ProtoVessel vessel, bool data3)
         {
             //if (!_block)
-            if (!subject.id.Contains("CactEye Planetary"))
+            if (!subject.id.Contains("CactEyePlanetary"))
                 ProxyOnScienceReceived.Fire(amount, subject, vessel, data3);
 
             //_block = false;
