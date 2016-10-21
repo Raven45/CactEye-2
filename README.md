@@ -14,6 +14,10 @@ To install the Compatibility patch for Distant Object Enhancement, extract the c
 "Compatibility Patch for Distant Object v1.5.4" folder to your GameData folder.
 
 ******************Change Log******************
+CactEye 2 1.2.0.9
+-Recompiled against 1.2.0
+-Restructured CactEye GUI for useability
+
 CactEye 2 1.1.3.8
 -Temporary Removal of DOE patch
 -Science definitions overhauled to clean them up
