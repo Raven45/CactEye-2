@@ -1,5 +1,5 @@
 {
-    "spec_version": "1.2.0.9",
+    "spec_version": "1.2.1.10",
     "$kref": "#/ckan/spacedock/629",
     "license": "CC-BY-4.0",
     "resources": {
@@ -10,6 +10,6 @@
 	"install"	:	[ { "file"	:	"CactEyeOptics/GameData/CactEye",
 						"install_to" : "GameData" } ],
 	"comment"	:	"CactEye telescopes feature a fully-functional science system, and are upgradeable/serviceable (primarily through Kerbal Inventory System). Orbital telescopes also now become fundamental to discovering asteroids."
-	"ksp_version_min" "1.2.0",
-	"ksp_version_max" "1.2.0",
+	"ksp_version_min" "1.2.1",
+	"ksp_version_max" "1.2.1",
 }

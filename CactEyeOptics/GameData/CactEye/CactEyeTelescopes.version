@@ -1,25 +1,25 @@
 {
 	"NAME":"CactEye Telescopes",
 	"URL":"https://raw.githubusercontent.com/icedown/CactEye-2/master/CactEyeOptics/GameData/CactEye/CactEyeTelescopes.version",
-	"DOWNLOAD":"https://github.com/icedown/CactEye-2/releases/download/1.2.0.9/CactEyeOptics1.2.0.9.zip",
+	"DOWNLOAD":"https://github.com/icedown/CactEye-2/releases/download/1.2.0.9/CactEyeOptics1.2.1.10.zip",
 	"CHANGE_LOG_URL":"https://github.com/icedown/CactEye-2/releases",
 	"VERSION":
 	{
 		"MAJOR":1,
 		"MINOR":2,
-		"PATCH":0,
-		"BUILD":9
+		"PATCH":1,
+		"BUILD":10
 	},
 	"KSP_VERSION":
 	{
 		"MAJOR":1,
 		"MINOR":2,
-		"PATCH":0
+		"PATCH":1
 	},
 	"KSP_VERSION_MIN":
 	{
 		"MAJOR":1,
 		"MINOR":2,
-		"PATCH":0
+		"PATCH":1
 	}
 }
