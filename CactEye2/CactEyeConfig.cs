@@ -43,10 +43,10 @@ namespace CactEye2
     {
 
         //Path to the configuration file.
-        private static string ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
+        private static string ConfigFilePath = null;
 
         //Specifies whether CactEye should operate in debug mode or not.
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
 
         //Specifies whether telescopes should blow up when pointed at the sun.
         public static bool SunDamage = true;
@@ -54,8 +54,12 @@ namespace CactEye2
         //Specifies whether telescopes should blow up when pointed at the sun.
         public static bool GyroDecay = true;
 
+        //Specifies whether the Asteroid spawner should be active
+        public static bool AsteroidSpawner = false;
+
         public void Start()
         {
+            ConfigFilePath = KSPUtil.ApplicationRootPath + "GameData/CactEye/Resources/settings.cfg";
             ReadSettings();
         }
 
@@ -75,11 +79,15 @@ namespace CactEye2
                     }
                     if (CactEye2.HasValue("SunDamage"))
                     {
-                        DebugMode = bool.Parse(CactEye2.GetValue("SunDamage"));
+                        SunDamage = bool.Parse(CactEye2.GetValue("SunDamage"));
                     }
                     if (CactEye2.HasValue("GyroDecay"))
                     {
-                        DebugMode = bool.Parse(CactEye2.GetValue("GyroDecay"));
+                        GyroDecay = bool.Parse(CactEye2.GetValue("GyroDecay"));
+                    }
+                    if(CactEye2.HasValue("AsteroidSpawner"))
+                    {
+                        AsteroidSpawner = bool.Parse(CactEye2.GetValue("AsteroidSpawner"));
                     }
                 }
                 else
@@ -109,6 +117,8 @@ namespace CactEye2
             Debug.Log("CactEye 2: SunDamage = " + SunDamage.ToString());
             CactEye2.AddValue("GyroDecay", GyroDecay);
             Debug.Log("CactEye 2: GyroDecay = " + GyroDecay.ToString());
+            CactEye2.AddValue("AsteroidSpawner", AsteroidSpawner);
+            Debug.Log("Cacteye 2: AsteroidSpawner = " + AsteroidSpawner.ToString());
             Settings.Save(ConfigFilePath);
         }
     }

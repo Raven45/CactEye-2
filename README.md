@@ -9,10 +9,55 @@ only if you are running Distant Object v1.5.4. The contents of that folder conta
 patch that makes CactEye 2 fully compatible with Distant Object 1.5.4. If you are not using 
 Distant Object, then the patch is not needed and will introduce unnecessary log spam. 
 
+NOTE: Distant Object Enhancement has been temporarily removed
 To install the Compatibility patch for Distant Object Enhancement, extract the contents of the 
 "Compatibility Patch for Distant Object v1.5.4" folder to your GameData folder.
 
 ******************Change Log******************
+CactEye 2 1.2.0.9
+-Recompiled against 1.2.0
+-Restructured CactEye GUI for useability
+
+CactEye 2 1.1.3.8
+-Temporary Removal of DOE patch
+-Science definitions overhauled to clean them up
+-Science rebalance
+-Science Changes
+--Processor Level Multipliers
+---Level 1 25%
+---Level 2 50%
+---Level 3 100%
+--Telescope Multipliers
+---Fungeye 50%
+---CactEye 100%
+--Added adaptive science cap based on processor level and telescope body
+-Update contracts to match new science
+
+CactEye 2 1.1.3.7
+-Fixed Dres science bug again
+
+CactEye 2 1.1.3.6
+-Research Bodies integration activated
+
+CactEye 2 1.1.3.5
+-Fixed Dres science bug
+-Config file settings should be honored
+-Rebalance of science
+-Telescopes only operate in Kerbin high orbit
+-Updated compile against DOE
+-Initial Research Bodies integration
+
+CactEye  2 1.1.3.4
+-Compiled against 1.1.3
+-Updated science to be all from high Kerbin orbit to prevent progression contract breaking
+
+CactEye 2 1.1.3.3
+-Initial science move to high Kerbin orbit
+
+CactEye 2 1.1.2.1
+-Initial Release by IceDown
+-Compiled against 1.1.2
+-Fixed GUI lockup while doing science
 
 CactEye 2 BETA 5.2
 -Fixed attachment node issues on some of the structural parts.

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.UI.Dialogs;
+using KSP.UI.Screens;
+using KSP.UI.Screens.Flight.Dialogs;
 
 namespace CactEye2
 {
@@ -30,20 +33,28 @@ namespace CactEye2
 
         private Vector3d OriginalSunDirection;
 
-        private GUIStyle ScienceStyle;
-        private GUIStyle ProgressStyle;
-        private GUISkin SkinStored;
-        private GUIStyleState StyleDefault;
+        private GUIStyle ScienceStyle = null;
+        private GUIStyle ProgressStyle = null;
+        private GUISkin SkinStored = null;
+        private GUIStyleState StyleDefault = null;
 
-        /* ************************************************************************************************
-         * Function Name: GetProessorType
-         * Input: None
-         * Output: The internal variable "Type"
-         * Purpose: This function will return the type of processor that another class is working with.
-         * The variable "Type" is a variable that can be modified through the part config files, and 
-         * specifies what type of processor the part is. This type will determine how the class behaves.
-         * ************************************************************************************************/
-        public string GetProcessorType()
+        public void Start()
+        {
+            ScienceStyle = new GUIStyle();
+            ProgressStyle = new GUIStyle();
+            SkinStored = new GUISkin();
+            StyleDefault = new GUIStyleState();
+        }
+
+    /* ************************************************************************************************
+     * Function Name: GetProessorType
+     * Input: None
+     * Output: The internal variable "Type"
+     * Purpose: This function will return the type of processor that another class is working with.
+     * The variable "Type" is a variable that can be modified through the part config files, and 
+     * specifies what type of processor the part is. This type will determine how the class behaves.
+     * ************************************************************************************************/
+    public string GetProcessorType()
         {
             return Type;
         }
@@ -123,7 +134,7 @@ namespace CactEye2
          * function's behavoir will change based on what processor is the active processor on the telescope.
          * Please see the individual definitions in sub classes for further details.
          * ************************************************************************************************/
-        public abstract string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot);
+        public abstract string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot);
 
         /* ************************************************************************************************
          * Function Name: OnUpdate
@@ -160,9 +171,19 @@ namespace CactEye2
         public void ActivateProcessor()
         {
             Active = true;
+            bool rbInit = false;
+            if (CactEyeOptics.IsModInstalled("ResearchBodies"))
+            {
+                if(!RBWrapper.APIRBReady)
+                {
+                    rbInit = RBWrapper.InitRBWrapper();
+                }
+            }
+            
             //CorrectLightDirection();
             if (CactEyeConfig.DebugMode)
             {
+                Debug.Log("CactEye 2: Debug: RB init returned " + rbInit.ToString());
                 Debug.Log("CactEye 2: Processor activated! " + Active.ToString());
             }
         }
@@ -356,12 +377,12 @@ namespace CactEye2
                 (
                 FlightGlobals.ActiveVessel.rootPart,    //hosting part
                 Data,                                   //Science data
-                Data.transmitValue,                     //scalar for transmitting the data
-                Data.labBoost,                          //scalar for lab bonuses
+                Data.baseTransmitValue,                     //scalar for transmitting the data
+                Data.labValue,                         //scalar for lab bonuses
                 false,                                  //bool for show transmit warning
                 "",                                     //string for transmit warning
                 false,                                  //show the reset button
-                false,                                  //show the lab option
+                new ScienceLabSearch(this.part.vessel, Data),//show the lab option
                 new Callback<ScienceData>(_onPageDiscard), 
                 new Callback<ScienceData>(_onPageKeep), 
                 new Callback<ScienceData>(_onPageTransmit), 
@@ -372,22 +393,21 @@ namespace CactEye2
             ExperimentsResultDialog ScienceDialog = ExperimentsResultDialog.DisplayResult(page);
 
             //Store the old dialog gui information
-            ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFill2").First();
-            GUIStyle style = ScienceDialog.guiSkin.box;
-            StyleDefault = style.normal;
-            SkinStored = ScienceDialog.guiSkin;
+//            ProgressStyle = ScienceDialog.guiSkin.customStyles.Where(n => n.name == "progressBarFill2").First();
+//            GUIStyle style = ScienceDialog.guiSkin.box;
+//            StyleDefault = style.normal;
+//            SkinStored = ScienceDialog.guiSkin;
 
             ////Lets put a pretty picture on the science dialog.
-            ScienceStyle = ScienceDialog.guiSkin.box;
+//            ScienceStyle = ScienceDialog.guiSkin.box;
             ScienceStyle.normal.background = Screenshot;
 
-            ScienceDialog.guiSkin.window.fixedWidth = 587f;
+//            ScienceDialog.guiSkin.window.fixedWidth = 587f;
             ScienceStyle.fixedWidth = 512f;
             ScienceStyle.fixedHeight = 288f;
 
             
         }
-
 
         private void ResetExperimentGUI()
         {

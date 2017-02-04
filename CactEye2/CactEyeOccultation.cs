@@ -14,17 +14,17 @@ namespace CactEye2
         [KSPField(isPersistant = true)]
         public string OcculationType = "None";
 
-        private string OccultationExperiment_Asteroid(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        private string OccultationExperiment_Asteroid(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
             return "";
         }
 
-        private string OccultationExperiment_Planetary(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        private string OccultationExperiment_Planetary(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
             return "";
         }
 
-        public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        public override string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
             if (OcculationType == "None")
             {
@@ -33,12 +33,12 @@ namespace CactEye2
 
             else if (OcculationType == "Asteroid")
             {
-                return OccultationExperiment_Asteroid(TargetPosition, IsSmallOptics, FOV, Screenshot);
+                return OccultationExperiment_Asteroid(TargetPosition, scienceMultiplier, FOV, Screenshot);
             }
 
             else
             {
-                return OccultationExperiment_Planetary(TargetPosition, IsSmallOptics, FOV, Screenshot);
+                return OccultationExperiment_Planetary(TargetPosition, scienceMultiplier, FOV, Screenshot);
             }
         }
     }

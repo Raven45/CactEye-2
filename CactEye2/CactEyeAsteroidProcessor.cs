@@ -65,7 +65,7 @@ namespace CactEye2
             //RevertLightDirection();
         }
 
-        public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        public override string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
 
             Vessel TargetVessel = FlightGlobals.fetch.VesselTarget.GetVessel();
@@ -95,7 +95,7 @@ namespace CactEye2
             else
             {
                 float SciencePoints = 0f;
-                string TargetName = TargetVessel.name;
+                ExperimentID = "CactEyeAsteroid";
                 ScienceExperiment AsteroidExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
                 ScienceSubject AsteroidSubject = ResearchAndDevelopment.GetExperimentSubject(AsteroidExperiment, ExperimentSituations.InSpaceHigh, FlightGlobals.ActiveVessel.mainBody, "");
 
@@ -110,12 +110,10 @@ namespace CactEye2
                     Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
                 }
 
-                if (IsSmallOptics)
-                {
-                    SciencePoints *= 0.1f;
-                }
+                //Different scopes have different multipliers for the science gains.
+                SciencePoints *= scienceMultiplier;
 
-                ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, AsteroidSubject.id, Type + " " + TargetName + " Observation");
+                ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, AsteroidSubject.id, Type + " " + FlightGlobals.activeTarget.name + " Observation");
                 StoredData.Add(Data);
                 ReviewData(Data, Screenshot);
                 return "";

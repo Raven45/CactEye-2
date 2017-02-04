@@ -11,7 +11,7 @@ namespace CactEye2
     public class CactEyeOptics: PartModule
     {
         [KSPField(isPersistant = false)]
-        public bool DebugMode = false;
+        public bool DebugMode = true;
 
         [KSPField(isPersistant = false)]
         public bool IsSmallOptics = false;
@@ -22,11 +22,23 @@ namespace CactEye2
         [KSPField(isPersistant = false)]
         public bool IsFunctional = false;
 
+        [KSPField(isPersistant = false)]
+        public float scienceMultiplier;
+
         [KSPField(isPersistant = true)]
         public bool IsDamaged = false;
 
         [KSPField(isPersistant = true)]
         public bool SmallApertureOpen = false;
+
+        [KSPField(isPersistant = true)]
+        public bool isRBInstalled;
+
+        [KSPField(isPersistant = true)]
+        public bool isRBEnabled;
+
+        public RBWrapper ResearchBodies;
+
 
         private ModuleAnimateGeneric opticsAnimate;
 
@@ -59,6 +71,14 @@ namespace CactEye2
             try
             {
                 TelescopeControlMenu = new TelescopeMenu(temp);
+                TelescopeControlMenu.scienceMultiplier = this.scienceMultiplier;
+                TelescopeControlMenu.SetSmallOptics(IsSmallOptics);
+                TelescopeControlMenu.SetScopeOpen(IsFunctional);
+                if(!IsSmallOptics)
+                {
+                    TelescopeControlMenu.SetAperature(opticsAnimate);
+                }
+
             }
             catch (Exception E)
             {
@@ -72,7 +92,7 @@ namespace CactEye2
             {
                 IsFunctional = true;
             }
-
+            
             if (CactEyeConfig.DebugMode)
             {
                 Debug.Log("CactEye 2: Debug: SmallApertureOpen is " + SmallApertureOpen.ToString());
@@ -80,6 +100,19 @@ namespace CactEye2
                 Debug.Log("CactEye 2: Debug: IsFunctional is " + IsFunctional.ToString());
                 Debug.Log("CactEye 2: Debug: IsDamaged is " + IsDamaged.ToString());
             }
+
+            
+        }
+        /* ************************************************************************************************
+         * Function Name: IsModInstalled
+         * Input: Mod Name
+         * Output: True if mod is found
+         * Purpose: This function will be called at start to determine if a particular mod is installed
+         * ************************************************************************************************/
+        public static bool IsModInstalled(string assemblyName)
+        {
+            return AssemblyLoader.loadedAssemblies.Any(a => a.name == assemblyName);
+
         }
 
         /* ************************************************************************************************
@@ -121,7 +154,7 @@ namespace CactEye2
                 {
                     //Check if we're pointing at the sun
                     Vector3d Heading = (FlightGlobals.Bodies[0].position - FlightGlobals.ship_position).normalized;
-                    if (Vector3d.Dot(transform.up, Heading) > 0.9)
+                    if (Vector3d.Dot(transform.up, Heading) > 0.9 && CactEyeConfig.SunDamage)
                     {
                         ScreenMessages.PostScreenMessage("Telescope pointed directly at sun, optics damaged and processors fried!", 6, ScreenMessageStyle.UPPER_CENTER);
                         BreakScope();
@@ -136,7 +169,11 @@ namespace CactEye2
             }
 
             //Send updated position information to the telescope gui object.
-            TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
+            if (TelescopeControlMenu != null)
+            {
+                TelescopeControlMenu.UpdatePosition(part.FindModelTransform(CameraTransformName));
+            }
+
         }
 
         /* ************************************************************************************************
@@ -244,6 +281,12 @@ namespace CactEye2
                 //Display error message that scope is damaged.
                 ScreenMessages.PostScreenMessage("Telescope optics are damaged! Telescope needs to be repaired by EVA!", 6, ScreenMessageStyle.UPPER_CENTER);
             }
+        }
+
+        public void OnGUI()
+        {
+            if (TelescopeControlMenu.IsGUIVisible)
+                TelescopeControlMenu.DrawGUI();
         }
 
         /* ************************************************************************************************

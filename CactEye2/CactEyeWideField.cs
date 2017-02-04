@@ -20,9 +20,10 @@ namespace CactEye2
          * if the target is not the sun, if the target is visible in the scope, and if the telescope
          * is zoomed in far enough.
          * ************************************************************************************************/
-        public override string DoScience(Vector3 TargetPosition, bool IsSmallOptics, float FOV, Texture2D Screenshot)
+        public override string DoScience(Vector3 TargetPosition, float scienceMultiplier, float FOV, Texture2D Screenshot)
         {
             CelestialBody Target = FlightGlobals.Bodies.Find(n => n.GetName() == FlightGlobals.fetch.VesselTarget.GetName());
+            CelestialBody Home = this.vessel.mainBody;
 
             //Sandbox or Career mode logic handled by gui.
             //if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
@@ -86,30 +87,87 @@ namespace CactEye2
             {
 
                 float SciencePoints = 0f;
+                float ScienceAdjustedCap = 0f;
+                float ScienceAvailableCap = 0f;
                 string TargetName = Target.name;
                 ScienceExperiment WideFieldExperiment;
                 ScienceSubject WideFieldSubject;
 
+                bool withParent;
+                CelestialBody parentBody;
+                
+
+                ExperimentID = "CactEyePlanetary";
                 try
                 {
                     WideFieldExperiment = ResearchAndDevelopment.GetExperiment(ExperimentID);
-                    WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Target, "");
+                    WideFieldSubject = ResearchAndDevelopment.GetExperimentSubject(WideFieldExperiment, ExperimentSituations.InSpaceHigh, Target, "VisualObservation" + Target.name);
+                    WideFieldSubject.title = "CactEye Visual Planetary Observation of " + Target.name;
+                    SciencePoints = WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience * scienceMultiplier;
+                    if (CactEyeConfig.DebugMode)
+                    {
+                        Debug.Log("Cacteye 2: SciencePoints: " + SciencePoints);
+                        Debug.Log("Cacteye 2: Current Science: " + WideFieldSubject.science);
+                        Debug.Log("Cacteye 2: Current Cap: " + WideFieldSubject.scienceCap);
+                        Debug.Log("Cacteye 2: ScienceValue: " + WideFieldSubject.scientificValue);
+                        Debug.Log("Cacteye 2: SubjectValue: " + ResearchAndDevelopment.GetSubjectValue(SciencePoints, WideFieldSubject));
+                        Debug.Log("Cacteye 2: RnDScienceValue: " + ResearchAndDevelopment.GetScienceValue(SciencePoints, WideFieldSubject, 1.0f));
+                        Debug.Log("Cacteye 2: RnDReferenceDataValue: " + ResearchAndDevelopment.GetReferenceDataValue(SciencePoints, WideFieldSubject));
 
-                    SciencePoints += WideFieldExperiment.baseValue * WideFieldExperiment.dataScale * maxScience;
+                    }
+                    //Modify Science cap and points gathered based on telescope and processor
+                    ScienceAdjustedCap = WideFieldExperiment.scienceCap * WideFieldExperiment.dataScale * maxScience * scienceMultiplier;
+                    
+                    //Since it's not clear how KSP figures science points, reverse engineer based off of what this will return.
+                    ScienceAvailableCap = ScienceAdjustedCap - ((SciencePoints / ResearchAndDevelopment.GetScienceValue(SciencePoints, WideFieldSubject, 1.0f)) * WideFieldSubject.science);
+                    if (CactEyeConfig.DebugMode)
+                    {
+                        Debug.Log("Cacteye 2: Adjusted Cap: " + ScienceAdjustedCap);
+                        Debug.Log("Cacteye 2: Available Cap: " + ScienceAvailableCap);
+                    }
+                    if (ScienceAvailableCap < 0)
+                    {
+                        ScienceAvailableCap = 0;
+                    }
+                    if (SciencePoints > ScienceAvailableCap)
+                    {
+                        SciencePoints = ScienceAvailableCap;
+                    }
+                    
 
                     if (CactEyeConfig.DebugMode)
                     {
                         Debug.Log("CactEye 2: SciencePoints: " + SciencePoints.ToString());
                     }
 
-                    if (IsSmallOptics)
-                    {
-                        SciencePoints *= 0.1f;
-                    }
 
-                    ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, WideFieldSubject.id, Type + " " + TargetName + " Observation");
+                    ScienceData Data = new ScienceData(SciencePoints, 1f, 0f, WideFieldSubject.id, WideFieldSubject.title);
                     StoredData.Add(Data);
                     ReviewData(Data, Screenshot);
+                    if (RBWrapper.APIRBReady)
+                    {
+                        Debug.Log("CactEye 2: Wrapper ready");
+                        
+                        RBWrapper.CelestialBodyInfo cbi;
+
+                        RBWrapper.RBactualAPI.CelestialBodies.TryGetValue(Target, out cbi);
+                        if(!cbi.isResearched) 
+                        {
+                            int RBFoundScience = (int)(8f * WideFieldExperiment.dataScale);
+                            RBWrapper.RBactualAPI.FoundBody(RBFoundScience, Target, out withParent, out parentBody);
+                        }
+                        else 
+                        {
+                            System.Random rnd = new System.Random();
+                            RBWrapper.RBactualAPI.Research(Target, rnd.Next(1,11));
+                        }
+                        
+
+                    }
+                    else
+                    { 
+                        Debug.Log("CactEye 2: Wrapper not ready");
+                    }
                 }
 
                 catch (Exception e)

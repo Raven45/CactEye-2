@@ -56,11 +56,14 @@ namespace CactEye2
          * ************************************************************************************************/
         public void Start()
         {
-            if (HighLogic.LoadedScene == GameScenes.FLIGHT ||
-                HighLogic.LoadedScene == GameScenes.SPACECENTER ||
-                HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+            if (CactEyeConfig.AsteroidSpawner)
             {
-                StartCoroutine(DelayedStart());
+                if (HighLogic.LoadedScene == GameScenes.FLIGHT ||
+                    HighLogic.LoadedScene == GameScenes.SPACECENTER ||
+                    HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+                {
+                    StartCoroutine(DelayedStart());
+                }
             }
         }
 

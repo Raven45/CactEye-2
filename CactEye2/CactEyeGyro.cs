@@ -99,7 +99,10 @@ namespace CactEye2
 
             if (IsFunctional)
             {
-                Lifetime = (float)((CreationTime + (SecondsToEarthDays * lifeSpan) - Planetarium.GetUniversalTime()) / (SecondsToEarthDays * lifeSpan));
+                if (CactEyeConfig.GyroDecay)
+                {
+                    Lifetime = (float)((CreationTime + (SecondsToEarthDays * lifeSpan) - Planetarium.GetUniversalTime()) / (SecondsToEarthDays * lifeSpan));
+                }
                 base.PitchTorque = OriginalPitchTorgue * (gyroScale + ((1 - gyroScale) * GyroSensitivity));
                 base.YawTorque = OriginalYawTorgue * (gyroScale + ((1 - gyroScale) * GyroSensitivity));
                 base.RollTorque = OriginalRollTorgue * (gyroScale + ((1 - gyroScale) * GyroSensitivity));
